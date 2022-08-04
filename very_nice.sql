@@ -1,0 +1,6 @@
+SELECT *
+FROM '2022_07'
+CROSS JOIN Contract
+WHERE '2022_07'.id=Contract.id
+ORDER BY Enrollment DESC
+LIMIT 1000

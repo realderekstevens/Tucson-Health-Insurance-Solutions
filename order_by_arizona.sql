@@ -1,0 +1,4 @@
+SELECT *
+FROM '2022_07'
+WHERE State=='AZ'
+ORDER BY Enrollment DESC
