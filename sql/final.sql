@@ -1,0 +1,3 @@
+SELECT * FROM public."2022_08"
+ORDER BY "2022_08".enrollment
+LIMIT 100

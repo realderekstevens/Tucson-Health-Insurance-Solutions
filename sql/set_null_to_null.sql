@@ -1,0 +1,1 @@
+UPDATE "Contracts" SET contracteffectivedate = NULL WHERE contracteffectivedate = 'NULL';

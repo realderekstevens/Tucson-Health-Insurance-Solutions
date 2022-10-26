@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+		
+{% block content %}
+<center>
+<body>
+</tr>
+		{% for row in result_2 %}
+		<h1><tr class="table__row">
+			{% for cell in row %}
+			<td class="table__cell">{{ cell }}</td></h1>
+
+			{% endfor %}
+		</tr>
+		{% endfor %}
+<br>
+
+
+		<table>
+			<caption>Performance Data</caption>
+			<tr class="table__header">
+				{% for header in headings_performance %}
+				<th>{{ header }}</th>
+				{% endfor %}
+			</tr>
+			{% for row in result_performance %}
+			<tr class="table__row">
+				{% for cell in row %}
+				<td class="table__cell">{{ cell }}</td>
+
+				{% endfor %}
+			</tr>
+			{% endfor %}
+		</table>
+		
+
+
+
+		<table>
+			<caption>Price Data</caption>
+			<tr class="table__header">
+				{% for header in headings_price %}
+				<th>{{ header }}</th>
+				{% endfor %}
+			</tr>
+			{% for row in result_price %}
+			<tr class="table__row">
+				{% for cell in row %}
+				<td class="table__cell">{{ cell }}</td>
+
+				{% endfor %}
+			</tr>
+			{% endfor %}
+		</table>
+		
+		
+		
+		<table>
+			<caption>Share Data</caption>
+			<tr class="table__header">
+				{% for header in headings_shares %}
+				<th>{{ header }}</th>
+				{% endfor %}
+			</tr>
+			{% for row in result_share %}
+			<tr class="table__row">
+				{% for cell in row %}
+				<td class="table__cell">{{ cell }}</td>
+
+				{% endfor %}
+			</tr>
+			{% endfor %}
+		</table>
+		
+		<table>
+			<caption>All of the price data information</caption>
+			<tr class="table__header">
+				{% for header in headings_1 %}
+				<th>{{ header }}</th>
+				{% endfor %}
+			</tr>
+			{% for row in result_1 %}
+			<tr class="table__row">
+				{% for cell in row %}
+				<td class="table__cell">{{ cell }}</td>
+
+				{% endfor %}
+			</tr>
+			{% endfor %}
+		</table>
+</body>
+
+
+<b>This is a private database for academic purposes only.</b></center>
+</center>
+{% endblock %}

@@ -1,0 +1,96 @@
+@font-face{
+font-family: helvetica;
+src: url('Helvetica.ttf');
+font-weight: bold;}
+
+@font-face{
+font-family: helvetica-bold;
+src: url('Helvetica-Bold.ttf');
+font-weight: bold;}
+
+html, body, h1, h2, h3, h4, h5, h6, body, object, table{
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	font-family: helvetica;
+}
+
+nav {
+	background-color: rgba(0,0,0, .6);
+	background-blend-mode: multiply;
+	background-size: cover;
+	padding-bottom: 30px;
+}
+
+ul {
+	position: -webkit-sticky; /* Safari */
+	position: sticky;
+	top: 0;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: #333;
+}
+
+li {
+  float: left;
+  border-right: 1px solid #bbb;
+}
+
+img {
+  max-width: 100%;
+}
+
+li:last-child {
+	border-right:none;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+li a:hover {
+  background-color: #111;
+}
+
+
+section {
+	margin: 20px;
+	padding: 0px;
+}
+
+table {
+	border: 3px solid black;
+	border-collapse: collapse;
+	width: 100%;
+	padding: 15px;
+}
+
+.active {
+  background-color: #04AA6D;
+}
+
+
+.header {
+	text-align: center;
+	margin: 100;
+	font-size: 10em;
+	width: 100%;
+}
+
+.w3-row-padding img {margin-bottom: 12px}
+
+.w3-sidebar {width: 120px;background: #222;}
+
+
+
+#main {margin-left: 120px}
+
+@media only screen and (max-width: 600px) {#main {margin-left: 0}}
+

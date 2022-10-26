@@ -1,0 +1,1 @@
+UPDATE enrollments SET Enrollment = replace(Enrollment,'*','0');

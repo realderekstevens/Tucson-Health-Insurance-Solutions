@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+		
+{% block content %}
+
+
+In 1929 the stock market was operated through two entities: The New York Stock Exchange and the Curb Market.
+
+This portion of the website is dedicated to graphing and better understanding the data of the stock market crash of 29'.
+		
+		<br><br>
+		<table>
+			<tr class="table__header">
+				{% for header in headings %}
+				<th>{{ header }}</th>
+				{% endfor %}
+			</tr>
+			{% for row in results %}
+			<tr class="table__row">
+				{% for cell in row %}
+				<td class="table__cell">{{ cell }}</td>
+
+				{% endfor %}
+			</tr>
+			{% endfor %}
+		</table>
+	</body>
+<br>
+
+{% endblock %}
