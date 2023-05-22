@@ -1,1 +1,0 @@
-SELECT * FROM enrollment WHERE County = "Pima" ORDER BY enrollment DESC;
