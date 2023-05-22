@@ -38,6 +38,7 @@ def example():
 def county(county: str):
 	connection = sqlite3.connect('db.db')
 	cursor = connection.cursor()
+	county = county.title()
 	rows = cursor.execute("SELECT * FROM enrollment INNER JOIN contract ON enrollment.Contract_Plan = contract.Contract_Plan WHERE County = '" + (county) + "' ORDER BY enrollment DESC LIMIT 100").fetchall()
 	print(rows)
 	connection.commit()
