@@ -213,6 +213,28 @@ CREATE TABLE "master" (
 	enrolled INTEGER );
 
 
+CREATE TABLE "2022_10" (
+	contractid text,
+	planid text,
+	ssa VARCHAR(20),
+	fips VARCHAR(20),
+	state VARCHAR(2),
+	county VARCHAR(100),
+	enrolled TEXT );
+
+COPY "2022_10" (contractid, planid, ssa, fips, state, county, enrolled)
+FROM 'J:\medicare\csv_big\CPSC_enrolled_Info_2022_10.csv'
+DELIMITER ','
+CSV HEADER;
+
+DELETE FROM "2022_09" WHERE enrolled = '*';
+ALTER TABLE "2022_09" ALTER COLUMN enrolled TYPE INTEGER USING (enrolled::integer);
+ALTER TABLE "2022_09" DROP COLUMN ssa;
+ALTER TABLE "2022_09" DROP COLUMN fips;
+ALTER TABLE "2022_09" ADD COLUMN "date" DATE DEFAULT '2022-10-15' ;
+ALTER TABLE "2022_09" ADD COLUMN "contractid_planid" text;
+UPDATE "2022_10" SET "contractid_planid" = contractid || '' || planid; COMMIT;
+
 CREATE TABLE "2022_09" (
 	contractid text,
 	planid text,

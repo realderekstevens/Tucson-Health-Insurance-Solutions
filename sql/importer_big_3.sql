@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS "contracts";
 DROP TABLE IF EXISTS "master";
 
-CREATE TABLE "2022_09" (
+CREATE TABLE "2022_10" (
 	contractid TEXT,
 	planid TEXT,
 	ssa VARCHAR(20),
@@ -10,26 +10,18 @@ CREATE TABLE "2022_09" (
 	county VARCHAR(100),
 	enrolled TEXT );
 
-COPY "2022_09" (contractid, planid, ssa, fips, state, county, enrolled)
-FROM 'J:\medicare\csv_big\CPSC_Enrollment_Info_2022_09.csv'
+COPY "2022_10" (contractid, planid, ssa, fips, state, county, enrolled)
+FROM 'J:\medicare\csv_big\CPSC_Enrollment_Info_2022_10.csv'
 DELIMITER ','
 CSV HEADER;
 
-DELETE FROM "2022_09" WHERE enrolled = '*';
-ALTER TABLE "2022_09" ALTER COLUMN enrolled TYPE INTEGER USING (enrolled::integer);
-ALTER TABLE "2022_09" DROP COLUMN ssa;
-ALTER TABLE "2022_09" DROP COLUMN fips;
-ALTER TABLE "2022_09" ADD COLUMN "date" DATE DEFAULT '2022-09-15' ;
-ALTER TABLE "2022_09" ADD COLUMN "contractandplanid" VARCHAR;
-UPDATE "2022_09" SET "contractandplanid" = contractid || '' || planid;
-
-
-
-
-
-
-
-
+DELETE FROM "2022_10" WHERE enrolled = '*';
+ALTER TABLE "2022_10" ALTER COLUMN enrolled TYPE INTEGER USING (enrolled::integer);
+ALTER TABLE "2022_10" DROP COLUMN ssa;
+ALTER TABLE "2022_10" DROP COLUMN fips;
+ALTER TABLE "2022_10" ADD COLUMN "date" DATE DEFAULT '2022-10-15' ;
+ALTER TABLE "2022_10" ADD COLUMN "contractandplanid" VARCHAR;
+UPDATE "2022_10" SET "contractandplanid" = contractid || '' || planid;
 
 CREATE TABLE "contracts_2022_09" (
 	contractid TEXT,
@@ -44,9 +36,6 @@ CREATE TABLE "contracts_2022_09" (
 	planname TEXT,
 	parentorganization TEXT,
 	contracteffectivedate DATE );
-	
-	
-	
 
 
 COPY "contracts_2022_09"
