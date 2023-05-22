@@ -2,7 +2,8 @@
 from sqlmodel import Session, Field, select, SQLModel
 from typing import Optional
 from rich.console import Console
-from database import create_db_and_tables, ENGINE
+from rich.table import Table
+from database import create_db_and_tables, ENGINE, import_contract_2023_05, import_enrollment_2023_05, join_tables
 from model.contract import *
 from model.enrollment import *
 import csv
@@ -14,7 +15,7 @@ app = typer.Typer(help = "CLI for Patrician from the commandline.")
 console = Console()
 
 def play_successful_message(good: bool = True):
-	message_start = "Excute: "
+	message_start = "Execute: "
 	if good:
 		ending = typer.style("successful", fg = typer.colors.GREEN, bold=True)
 	else:
@@ -23,88 +24,95 @@ def play_successful_message(good: bool = True):
 	typer.echo(message)
 
 @app.command()
-def import_contract():
-	'''Establish Connection'''
+def example():
 	connection = sqlite3.connect('db.db')
-	console.print("[bold green]Established Connection![/bold green]")
 	cursor = connection.cursor()
-	console.print("[bold green]Established Cursor![/bold green]")
-	file = open('csv/CPSC_Contract_Info_2023_04.csv', encoding='cp1252')
-	contents = csv.reader(file)
-	insert_records = "INSERT INTO contract (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-	cursor.executemany(insert_records, contents)
-	select_all = "SELECT * FROM contract"
-	rows = cursor.execute(select_all).fetchall()
+	sql_command = "SELECT * FROM enrollment INNER JOIN contract ON enrollment.Contract_Plan = contract.Contract_Plan ORDER BY enrollment DESC LIMIT 1"
+	rows = cursor.execute(sql_command).fetchall()
+	print(rows)
 	connection.commit()
 	connection.close()
 	play_successful_message()
 
 @app.command()
-def import_enrollment():
-	'''Establish Connection'''
+def county(county: str):
 	connection = sqlite3.connect('db.db')
-	console.print("[bold green]Established Connection![/bold green]")
 	cursor = connection.cursor()
-	console.print("[bold green]Established Cursor![/bold green]")
-	file = open('csv/CPSC_Enrollment_Info_2023_04.csv',encoding='cp1252')
-	contents = csv.reader(file)
-	insert_records = "INSERT INTO enrollment (ContractID, PlanID, SSACode, FIPSCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
-	cursor.executemany(insert_records, contents)
-	select_all = "SELECT * FROM enrollment"
-	rows = cursor.execute(select_all).fetchall()
+	rows = cursor.execute("SELECT * FROM enrollment INNER JOIN contract ON enrollment.Contract_Plan = contract.Contract_Plan WHERE County = '" + (county) + "' ORDER BY enrollment DESC LIMIT 100").fetchall()
+	print(rows)
+	connection.commit()
+	connection.close()
+	play_successful_message()
+
+# @app.command()
+# def marketing_name(OrganizationMarketingName: str):
+	# connection = sqlite3.connect('db.db')
+	# cursor = connection.cursor()
+	# rows = cursor.execute("SELECT * FROM enrollment INNER JOIN contract ON enrollment.Contract_Plan = contract.Contract_Plan WHERE contract.OrganizationMarketingName = '" + (OrganizationMarketingName) + "' ORDER BY enrollment DESC LIMIT 100").fetchall()
+	# print(rows)
+	# connection.commit()
+	# connection.close()
+	# play_successful_message()
+
+@app.command()
+def state(state: str):
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	rows = cursor.execute("SELECT * FROM enrollment INNER JOIN contract ON enrollment.Contract_Plan = contract.Contract_Plan WHERE State = '" + (state) + "' ORDER BY enrollment DESC LIMIT 100").fetchall()
+	print(rows)
 	connection.commit()
 	connection.close()
 	play_successful_message()
 
 @app.command()
-def join_tables():
-	'''Establish Connection'''
+def contract_plan(contract_plan: str):
 	connection = sqlite3.connect('db.db')
-	console.print("[bold green]Established Connection![/bold green]")
 	cursor = connection.cursor()
-	console.print("[bold green]Established Cursor![/bold green]")
-	sql_command_1 = "DELETE FROM enrollment WHERE enrollment.Enrollment = '*';"
-	sql_command_2 = "DELETE FROM enrollment WHERE enrollment.Enrollment = 'Enrollment';"
-	sql_command_3 = "DELETE FROM contract WHERE contract.ContractID = 'Contract ID';"
-	sql_command_4 = "ALTER TABLE enrollment ADD COLUMN 'Contract_Plan';" 
-	sql_command_5 = "ALTER TABLE contract ADD COLUMN 'Contract_Plan';"
-	sql_command_6 = "UPDATE enrollment SET 'Contract_Plan' = ContractID || '' || PlanID;"
-	sql_command_7 = "UPDATE contract SET 'Contract_Plan' = ContractID || '' || PlanID;"
-	sql_command_8 = "SELECT * FROM enrollment INNER JOIN contract ON enrollment.Contract_Plan = contract.Contract_Plan ORDER BY enrollment DESC"
-	cursor.execute(sql_command_1)
-	cursor.execute(sql_command_2)
-	cursor.execute(sql_command_3)
-	cursor.execute(sql_command_4)
-	cursor.execute(sql_command_5)
-	cursor.execute(sql_command_6)
-	cursor.execute(sql_command_7)
-	rows = cursor.execute(sql_command_8).fetchall()
+	rows = cursor.execute("SELECT * FROM enrollment INNER JOIN contract ON enrollment.Contract_Plan = contract.Contract_Plan WHERE enrollment.Contract_Plan = '" + (contract_plan) + "' ORDER BY enrollment DESC LIMIT 100").fetchall()
+	print(rows)
 	connection.commit()
 	connection.close()
 	play_successful_message()
 
 @app.command()
-def clean_enrollment():
-	with Session(ENGINE) as session:
-		statement = select(Enrollment).where(Enrollment.Enrollment == "*")
-		results = session.exec(statement)
-		enrollment = results.all()
-		Enrollment.enrollment = 0
-		session.add(enrollment)
-		session.commit()
-		session.refresh(enrollment)
+def contract(contract: str):
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	rows = cursor.execute("SELECT * FROM enrollment INNER JOIN contract ON enrollment.Contract_Plan = contract.Contract_Plan WHERE enrollment.ContractID = '" + (contract) + "' ORDER BY enrollment DESC LIMIT 100").fetchall()
+	print(rows)
+	connection.commit()
+	connection.close()
+	play_successful_message()
 
 @app.command()
-def init_all():
+def show():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	sql_command = "SELECT enrollment, State, County FROM enrollment INNER JOIN contract ON enrollment.Contract_Plan = contract.Contract_Plan ORDER BY enrollment DESC LIMIT 10"
+	rows = cursor.execute(sql_command).fetchall()
+	
+	list = [['Cat', '7', 'Female'],
+	['Dog', '0.5', 'Male'],
+	['Guinea Pig', '5', 'Male']]
+	
+	table = Table(show_header=True, header_style="bold blue")
+	table.add_column("#", style="dim", width=6)
+	table.add_column("State", min_width = 10)
+	table.add_column("County", min_width = 20, justify = "right")
+
+	for row in zip(*list):
+		table.add_row(*row)
+	connection.commit()
+	connection.close()
+	console.print(table)
+	play_successful_message()
+
+@app.command()
+def init():
 	create_db_and_tables()
-	import_contract()
-	import_enrollment()
-
-
-@app.command()
-def stage_2():
+	import_contract_2023_05()
+	import_enrollment_2023_05()
 	join_tables()
-	clean_enrollment()
 
 if __name__ == "__main__":
 	app()
