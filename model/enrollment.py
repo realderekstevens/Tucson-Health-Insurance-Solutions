@@ -3,17 +3,6 @@ from pydantic import condecimal
 from database import ENGINE
 from sqlmodel import Field, Relationship, Session, SQLModel, create_engine, select
 
-class Enrollment_All(SQLModel, table=True):
-	'''Enrollment Idenfifier'''
-	id: Optional[int] = Field(default=None, primary_key=True)
-	ContractID: str
-	PlanID: str
-	SSACode: str
-	FIPSCode: str
-	State: str
-	County: str
-	Enrollment: int
-
 class Enrollment_2023_05(SQLModel, table=True):
 	'''Enrollment Identifer'''
 	id: Optional[int] = Field(default=None, primary_key=True)

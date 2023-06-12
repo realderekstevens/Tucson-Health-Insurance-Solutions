@@ -202,7 +202,7 @@ def import_enrollment_2023_04():
 	cursor = connection.cursor()
 	file = open('csv/CPSC_Enrollment_Info_2023_04.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Enrollment_2023_04 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
 	connection.commit()
 	connection.close()
@@ -212,7 +212,7 @@ def import_enrollment_2023_03():
 	cursor = connection.cursor()
 	file = open('csv/CPSC_Enrollment_Info_2023_03.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Enrollment_2023_03 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
 	connection.commit()
 	connection.close()
@@ -222,7 +222,7 @@ def import_enrollment_2023_02():
 	cursor = connection.cursor()
 	file = open('csv/CPSC_Enrollment_Info_2023_02.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Enrollment_2023_02 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
 	connection.commit()
 	connection.close()
@@ -232,7 +232,7 @@ def import_enrollment_2023_01():
 	cursor = connection.cursor()
 	file = open('csv/CPSC_Enrollment_Info_2023_01.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Enrollment_2023_01 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
 	connection.commit()
 	connection.close()
@@ -242,7 +242,7 @@ def import_enrollment_2022_12():
 	cursor = connection.cursor()
 	file = open('csv/CPSC_Enrollment_Info_2022_12.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Enrollment_2022_12 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
 	connection.commit()
 	connection.close()
@@ -252,7 +252,7 @@ def import_enrollment_2022_11():
 	cursor = connection.cursor()
 	file = open('csv/CPSC_Enrollment_Info_2022_11.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Enrollment_2022_11 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
 	connection.commit()
 	connection.close()
@@ -262,7 +262,7 @@ def import_enrollment_2022_10():
 	cursor = connection.cursor()
 	file = open('csv/CPSC_Enrollment_Info_2022_10.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Enrollment_2022_10 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
 	connection.commit()
 	connection.close()
@@ -272,7 +272,7 @@ def import_enrollment_2022_09():
 	cursor = connection.cursor()
 	file = open('csv/CPSC_Enrollment_Info_2022_09.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Enrollment_2022_09 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
 	connection.commit()
 	connection.close()
@@ -282,7 +282,7 @@ def import_enrollment_2022_08():
 	cursor = connection.cursor()
 	file = open('csv/CPSC_Enrollment_Info_2022_08.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Enrollment_2022_08 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
 	connection.commit()
 	connection.close()
@@ -292,7 +292,7 @@ def import_enrollment_2022_07():
 	cursor = connection.cursor()
 	file = open('csv/CPSC_Enrollment_Info_2022_07.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Enrollment_2022_07 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
 	connection.commit()
 	connection.close()
@@ -302,7 +302,7 @@ def import_enrollment_2022_06():
 	cursor = connection.cursor()
 	file = open('csv/CPSC_Enrollment_Info_2022_06.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Enrollment_2022_06 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
 	connection.commit()
 	connection.close()
@@ -312,7 +312,7 @@ def import_enrollment_2022_05():
 	cursor = connection.cursor()
 	file = open('csv/CPSC_Enrollment_Info_2022_05.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Enrollment_2022_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
 	connection.commit()
 	connection.close()
@@ -322,7 +322,7 @@ def import_enrollment_2022_04():
 	cursor = connection.cursor()
 	file = open('csv/CPSC_Enrollment_Info_2022_04.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Enrollment_2022_04 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
 	connection.commit()
 	connection.close()
@@ -332,7 +332,7 @@ def import_enrollment_2022_03():
 	cursor = connection.cursor()
 	file = open('csv/CPSC_Enrollment_Info_2022_03.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Enrollment_2022_03 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
 	connection.commit()
 	connection.close()
@@ -342,7 +342,7 @@ def import_enrollment_2022_02():
 	cursor = connection.cursor()
 	file = open('csv/CPSC_Enrollment_Info_2022_02.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Enrollment_2022_02 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
 	connection.commit()
 	connection.close()
@@ -352,7 +352,7 @@ def import_enrollment_2022_01():
 	cursor = connection.cursor()
 	file = open('csv/CPSC_Enrollment_Info_2022_01.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Enrollment_2022_01 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
 	connection.commit()
 	connection.close()
