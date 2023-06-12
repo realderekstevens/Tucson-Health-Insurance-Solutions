@@ -20,10 +20,8 @@ def import_contract_2023_05():
 	cursor = connection.cursor()
 	file = open('csv/CPSC_Contract_Info_2023_05.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO contract (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Contract_2023_05 (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
-	select_all = "SELECT * FROM contract"
-	rows = cursor.execute(select_all).fetchall()
 	connection.commit()
 	connection.close()
 
@@ -32,46 +30,158 @@ def import_contract_2023_04():
 	cursor = connection.cursor()
 	file = open('csv/CPSC_Contract_Info_2023_04.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO contract (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Contract_2023_04 (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
-	select_all = "SELECT * FROM contract"
-	rows = cursor.execute(select_all).fetchall()
 	connection.commit()
 	connection.close()
 
 def import_contract_2023_03():
 	connection = sqlite3.connect('db.db')
 	cursor = connection.cursor()
-	file = open('csv/CPSC_Contract_Info_2023_04.csv', encoding='cp1252')
+	file = open('csv/CPSC_Contract_Info_2023_03.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO contract (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Contract_2023_03 (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
-	select_all = "SELECT * FROM contract"
-	rows = cursor.execute(select_all).fetchall()
 	connection.commit()
 	connection.close()
 
 def import_contract_2023_02():
 	connection = sqlite3.connect('db.db')
 	cursor = connection.cursor()
-	file = open('csv/CPSC_Contract_Info_2023_03.csv', encoding='cp1252')
+	file = open('csv/CPSC_Contract_Info_2023_02.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO contract (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Contract_2023_02 (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
-	select_all = "SELECT * FROM contract"
-	rows = cursor.execute(select_all).fetchall()
 	connection.commit()
 	connection.close()
 
 def import_contract_2023_01():
 	connection = sqlite3.connect('db.db')
 	cursor = connection.cursor()
-	file = open('csv/CPSC_Contract_Info_2023_02.csv', encoding='cp1252')
+	file = open('csv/CPSC_Contract_Info_2023_01.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO contract (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Contract_2023_01 (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
-	select_all = "SELECT * FROM contract"
-	rows = cursor.execute(select_all).fetchall()
+	connection.commit()
+	connection.close()
+
+def import_contract_2022_12():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Contract_Info_2022_12.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Contract_2022_12 (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
+	connection.commit()
+	connection.close()
+
+def import_contract_2022_11():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Contract_Info_2022_11.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Contract_2022_11 (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
+	connection.commit()
+	connection.close()
+
+def import_contract_2022_10():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Contract_Info_2022_10.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Contract_2022_10 (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
+	connection.commit()
+	connection.close()
+
+def import_contract_2022_09():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Contract_Info_2022_09.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Contract_2022_09 (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
+	connection.commit()
+	connection.close()
+
+def import_contract_2022_08():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Contract_Info_2022_08.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Contract_2022_08 (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
+	connection.commit()
+	connection.close()
+
+def import_contract_2022_07():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Contract_Info_2022_07.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Contract_2022_07 (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
+	connection.commit()
+	connection.close()
+
+def import_contract_2022_06():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Contract_Info_2022_06.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Contract_2022_06 (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
+	connection.commit()
+	connection.close()
+
+def import_contract_2022_05():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Contract_Info_2022_05.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Contract_2022_05 (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
+	connection.commit()
+	connection.close()
+
+def import_contract_2022_04():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Contract_Info_2022_04.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Contract_2022_04 (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
+	connection.commit()
+	connection.close()
+
+def import_contract_2022_03():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Contract_Info_2022_03.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Contract_2022_03 (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
+	connection.commit()
+	connection.close()
+
+def import_contract_2022_02():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Contract_Info_2022_02.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Contract_2022_02 (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
+	connection.commit()
+	connection.close()
+
+def import_contract_2022_01():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Contract_Info_2022_01.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Contract_2022_01 (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
 	connection.commit()
 	connection.close()
 
@@ -80,12 +190,10 @@ def import_contract_2023_01():
 def import_enrollment_2023_05():
 	connection = sqlite3.connect('db.db')
 	cursor = connection.cursor()
-	file = open('csv/CPSC_Enrollment_Info_2023_01.csv', encoding='cp1252')
+	file = open('csv/CPSC_Enrollment_Info_2023_05.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO enrollment (ContractID, PlanID, SSACode, FIPSCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
-	select_all = "SELECT * FROM enrollment"
-	rows = cursor.execute(select_all).fetchall()
 	connection.commit()
 	connection.close()
 
@@ -94,10 +202,8 @@ def import_enrollment_2023_04():
 	cursor = connection.cursor()
 	file = open('csv/CPSC_Enrollment_Info_2023_04.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO enrollment (ContractID, PlanID, SSACode, FIPSCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
-	select_all = "SELECT * FROM enrollment"
-	rows = cursor.execute(select_all).fetchall()
 	connection.commit()
 	connection.close()
 
@@ -106,10 +212,8 @@ def import_enrollment_2023_03():
 	cursor = connection.cursor()
 	file = open('csv/CPSC_Enrollment_Info_2023_03.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO enrollment (ContractID, PlanID, SSACode, FIPSCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
-	select_all = "SELECT * FROM enrollment"
-	rows = cursor.execute(select_all).fetchall()
 	connection.commit()
 	connection.close()
 
@@ -118,10 +222,8 @@ def import_enrollment_2023_02():
 	cursor = connection.cursor()
 	file = open('csv/CPSC_Enrollment_Info_2023_02.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO enrollment (ContractID, PlanID, SSACode, FIPSCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
-	select_all = "SELECT * FROM enrollment"
-	rows = cursor.execute(select_all).fetchall()
 	connection.commit()
 	connection.close()
 
@@ -130,13 +232,130 @@ def import_enrollment_2023_01():
 	cursor = connection.cursor()
 	file = open('csv/CPSC_Enrollment_Info_2023_01.csv', encoding='cp1252')
 	contents = csv.reader(file)
-	insert_records = "INSERT INTO enrollment (ContractID, PlanID, SSACode, FIPSCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
 	cursor.executemany(insert_records, contents)
-	select_all = "SELECT * FROM enrollment"
-	rows = cursor.execute(select_all).fetchall()
 	connection.commit()
 	connection.close()
 
+def import_enrollment_2022_12():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Enrollment_Info_2022_12.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
+	connection.commit()
+	connection.close()
+
+def import_enrollment_2022_11():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Enrollment_Info_2022_11.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
+	connection.commit()
+	connection.close()
+
+def import_enrollment_2022_10():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Enrollment_Info_2022_10.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
+	connection.commit()
+	connection.close()
+
+def import_enrollment_2022_09():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Enrollment_Info_2022_09.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
+	connection.commit()
+	connection.close()
+
+def import_enrollment_2022_08():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Enrollment_Info_2022_08.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
+	connection.commit()
+	connection.close()
+
+def import_enrollment_2022_07():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Enrollment_Info_2022_07.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
+	connection.commit()
+	connection.close()
+
+def import_enrollment_2022_06():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Enrollment_Info_2022_06.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
+	connection.commit()
+	connection.close()
+
+def import_enrollment_2022_05():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Enrollment_Info_2022_05.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
+	connection.commit()
+	connection.close()
+
+def import_enrollment_2022_04():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Enrollment_Info_2022_04.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
+	connection.commit()
+	connection.close()
+
+def import_enrollment_2022_03():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Enrollment_Info_2022_03.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
+	connection.commit()
+	connection.close()
+
+def import_enrollment_2022_02():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Enrollment_Info_2022_02.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
+	connection.commit()
+	connection.close()
+
+def import_enrollment_2022_01():
+	connection = sqlite3.connect('db.db')
+	cursor = connection.cursor()
+	file = open('csv/CPSC_Enrollment_Info_2022_01.csv', encoding='cp1252')
+	contents = csv.reader(file)
+	insert_records = "INSERT INTO Enrollment_2023_05 (ContractID, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment) VALUES(?, ?, ?, ?, ?, ?, ?)"
+	cursor.executemany(insert_records, contents)
+	connection.commit()
+	connection.close()
 # Join Tables
 
 def join_tables():
@@ -145,16 +364,14 @@ def join_tables():
 	sql_command_1 = "DELETE FROM enrollment WHERE enrollment.Enrollment = '*';"
 	sql_command_2 = "DELETE FROM enrollment WHERE enrollment.Enrollment = 'Enrollment';"
 	sql_command_3 = "DELETE FROM contract WHERE contract.ContractID = 'Contract ID';"
-	sql_command_4 = "ALTER TABLE enrollment ADD COLUMN 'Contract_Plan';" 
-	sql_command_5 = "ALTER TABLE contract ADD COLUMN 'Contract_Plan';"
-	sql_command_6 = "UPDATE enrollment SET 'Contract_Plan' = ContractID || '' || PlanID;"
-	sql_command_7 = "UPDATE contract SET 'Contract_Plan' = ContractID || '' || PlanID;"
+	sql_command_4 = "ALTER TABLE contract ADD COLUMN 'Contract_Plan';"
+	sql_command_5 = "UPDATE enrollment SET 'Contract_Plan' = ContractID || '' || PlanID;"
+	sql_command_6 = "UPDATE contract SET 'Contract_Plan' = ContractID || '' || PlanID;"
 	cursor.execute(sql_command_1)
 	cursor.execute(sql_command_2)
 	cursor.execute(sql_command_3)
 	cursor.execute(sql_command_4)
 	cursor.execute(sql_command_5)
 	cursor.execute(sql_command_6)
-	cursor.execute(sql_command_7)
 	connection.commit()
 	connection.close()

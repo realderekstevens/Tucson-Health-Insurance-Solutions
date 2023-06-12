@@ -3,7 +3,7 @@ from pydantic import condecimal
 from database import ENGINE
 from sqlmodel import Field, Relationship, Session, SQLModel, create_engine, select
 
-class Enrollment(SQLModel, table=True):
+class Enrollment_All(SQLModel, table=True):
 	'''Enrollment Idenfifier'''
 	id: Optional[int] = Field(default=None, primary_key=True)
 	ContractID: str
@@ -13,3 +13,190 @@ class Enrollment(SQLModel, table=True):
 	State: str
 	County: str
 	Enrollment: int
+
+class Enrollment_2023_05(SQLModel, table=True):
+	'''Enrollment Identifer'''
+	id: Optional[int] = Field(default=None, primary_key=True)
+	ContractID: str
+	PlanID: str
+	SSAStateCountyCode: str
+	FIPSStateCountyCode: str
+	State: str
+	County: str
+	Enrollment: str
+
+class Enrollment_2023_04(SQLModel, table=True):
+	'''Enrollment Identifer'''
+	id: Optional[int] = Field(default=None, primary_key=True)
+	ContractID: str
+	PlanID: str
+	SSAStateCountyCode: str
+	FIPSStateCountyCode: str
+	State: str
+	County: str
+	Enrollment: str
+
+class Enrollment_2023_03(SQLModel, table=True):
+	'''Enrollment Identifer'''
+	id: Optional[int] = Field(default=None, primary_key=True)
+	ContractID: str
+	PlanID: str
+	SSAStateCountyCode: str
+	FIPSStateCountyCode: str
+	State: str
+	County: str
+	Enrollment: str
+
+class Enrollment_2023_02(SQLModel, table=True):
+	'''Enrollment Identifer'''
+	id: Optional[int] = Field(default=None, primary_key=True)
+	ContractID: str
+	PlanID: str
+	SSAStateCountyCode: str
+	FIPSStateCountyCode: str
+	State: str
+	County: str
+	Enrollment: str
+
+class Enrollment_2023_01(SQLModel, table=True):
+	'''Enrollment Identifer'''
+	id: Optional[int] = Field(default=None, primary_key=True)
+	ContractID: str
+	PlanID: str
+	SSAStateCountyCode: str
+	FIPSStateCountyCode: str
+	State: str
+	County: str
+	Enrollment: str
+
+class Enrollment_2022_12(SQLModel, table=True):
+	'''Enrollment Identifer'''
+	id: Optional[int] = Field(default=None, primary_key=True)
+	ContractID: str
+	PlanID: str
+	SSAStateCountyCode: str
+	FIPSStateCountyCode: str
+	State: str
+	County: str
+	Enrollment: str
+
+class Enrollment_2022_11(SQLModel, table=True):
+	'''Enrollment Identifer'''
+	id: Optional[int] = Field(default=None, primary_key=True)
+	ContractID: str
+	PlanID: str
+	SSAStateCountyCode: str
+	FIPSStateCountyCode: str
+	State: str
+	County: str
+	Enrollment: str
+
+class Enrollment_2022_10(SQLModel, table=True):
+	'''Enrollment Identifer'''
+	id: Optional[int] = Field(default=None, primary_key=True)
+	ContractID: str
+	PlanID: str
+	SSAStateCountyCode: str
+	FIPSStateCountyCode: str
+	State: str
+	County: str
+	Enrollment: str
+
+class Enrollment_2022_09(SQLModel, table=True):
+	'''Enrollment Identifer'''
+	id: Optional[int] = Field(default=None, primary_key=True)
+	ContractID: str
+	PlanID: str
+	SSAStateCountyCode: str
+	FIPSStateCountyCode: str
+	State: str
+	County: str
+	Enrollment: str
+
+class Enrollment_2022_08(SQLModel, table=True):
+	'''Enrollment Identifer'''
+	id: Optional[int] = Field(default=None, primary_key=True)
+	ContractID: str
+	PlanID: str
+	SSAStateCountyCode: str
+	FIPSStateCountyCode: str
+	State: str
+	County: str
+	Enrollment: str
+
+class Enrollment_2022_07(SQLModel, table=True):
+	'''Enrollment Identifer'''
+	id: Optional[int] = Field(default=None, primary_key=True)
+	ContractID: str
+	PlanID: str
+	SSAStateCountyCode: str
+	FIPSStateCountyCode: str
+	State: str
+	County: str
+	Enrollment: str
+
+class Enrollment_2022_06(SQLModel, table=True):
+	'''Enrollment Identifer'''
+	id: Optional[int] = Field(default=None, primary_key=True)
+	ContractID: str
+	PlanID: str
+	SSAStateCountyCode: str
+	FIPSStateCountyCode: str
+	State: str
+	County: str
+	Enrollment: str
+
+class Enrollment_2022_05(SQLModel, table=True):
+	'''Enrollment Identifer'''
+	id: Optional[int] = Field(default=None, primary_key=True)
+	ContractID: str
+	PlanID: str
+	SSAStateCountyCode: str
+	FIPSStateCountyCode: str
+	State: str
+	County: str
+	Enrollment: str
+
+class Enrollment_2022_04(SQLModel, table=True):
+	'''Enrollment Identifer'''
+	id: Optional[int] = Field(default=None, primary_key=True)
+	ContractID: str
+	PlanID: str
+	SSAStateCountyCode: str
+	FIPSStateCountyCode: str
+	State: str
+	County: str
+	Enrollment: str
+
+class Enrollment_2022_03(SQLModel, table=True):
+	'''Enrollment Identifer'''
+	id: Optional[int] = Field(default=None, primary_key=True)
+	ContractID: str
+	PlanID: str
+	SSAStateCountyCode: str
+	FIPSStateCountyCode: str
+	State: str
+	County: str
+	Enrollment: str
+
+class Enrollment_2022_02(SQLModel, table=True):
+	'''Enrollment Identifer'''
+	id: Optional[int] = Field(default=None, primary_key=True)
+	ContractID: str
+	PlanID: str
+	SSAStateCountyCode: str
+	FIPSStateCountyCode: str
+	State: str
+	County: str
+	Enrollment: str
+
+class Enrollment_2022_01(SQLModel, table=True):
+	'''Enrollment Identifer'''
+	id: Optional[int] = Field(default=None, primary_key=True)
+	ContractID: str
+	PlanID: str
+	SSAStateCountyCode: str
+	FIPSStateCountyCode: str
+	State: str
+	County: str
+	Enrollment: str
