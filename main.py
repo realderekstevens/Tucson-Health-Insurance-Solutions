@@ -3,6 +3,10 @@ from fastapi.params import Body
 
 app = FastAPI()
 
+class Post(BaseModel):
+	title: str
+	content: str
+
 @app.get("/")
 def root():
 	return {"message": "Hello World"}
@@ -12,6 +16,6 @@ def get_posts():
 	return {"data": "This is your posts"}
 
 @app.post("/createposts")
-def create_posts(payload: dict = Body(...)):
-	print(payload)
-	return {"new_post": f"Title: {payload['title']} Content: {payload['content']}"}
+def create_posts(new_post: Post):
+	print(new_post.title)
+	return {"data": "new post"}
