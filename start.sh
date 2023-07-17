@@ -1,1 +1,1 @@
-exec uvicorn --workers 10 main:app
+uvicorn app:main
