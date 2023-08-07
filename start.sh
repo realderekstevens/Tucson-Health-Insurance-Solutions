@@ -1,1 +1,1 @@
-uvicorn app:main
+exec uvicorn --workers 10 main:app --reload
