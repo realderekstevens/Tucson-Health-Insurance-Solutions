@@ -20,6 +20,20 @@ CREATE TABLE api.contracts (
 	ParentOrganization VARCHAR(100),
 	ContractEffectiveDate VARCHAR(100));
 
+CREATE TABLE api.enrollments (
+	contractid text,
+	planid text,
+	ssa VARCHAR(20),
+	fips VARCHAR(20),
+	state VARCHAR(2),
+	county VARCHAR(100),
+	enrolled TEXT );
+
+COPY "2022_10" (contractid, planid, ssa, fips, state, county, enrolled)
+FROM 'J:\medicare\csv_big\CPSC_enrolled_Info_2022_10.csv'
+DELIMITER ','
+CSV HEADER;
+
 create role web_anon nologin;
 
 grant usage on schema api to web_anon;
