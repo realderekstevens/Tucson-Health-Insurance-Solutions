@@ -1,0 +1,1 @@
+UPDATE Contract SET id = ContractNumber || ' - ' || PlanID;
