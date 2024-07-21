@@ -162,8 +162,8 @@ CREATE_TABLE_ENROLLMENTS(){
 	$PSQL "ALTER TABLE enrollments ADD COLUMN postgres_id SERIAL PRIMARY KEY;"
 	$PSQL "ALTER TABLE enrollments ADD COLUMN contract_id VARCHAR(10);"
 	$PSQL "ALTER TABLE enrollments ADD COLUMN plan_id SMALLINT;"
-	$PSQL "ALTER TABLE enrollments ADD COLUMN ssa_state_county_code INT(10);"
-	$PSQL "ALTER TABLE enrollments ADD COLUMN fips_state_county_code INT(10);"
+	$PSQL "ALTER TABLE enrollments ADD COLUMN ssa_state_county_code INT;"
+	$PSQL "ALTER TABLE enrollments ADD COLUMN fips_state_county_code INT;"
 	$PSQL "ALTER TABLE enrollments ADD COLUMN state VARCHAR(2);"
 	$PSQL "ALTER TABLE enrollments ADD COLUMN county VARCHAR(25);"
 	$PSQL "ALTER TABLE enrollments ADD COLUMN enrollment VARCHAR(100);"
@@ -200,7 +200,7 @@ DELETE_TABLE_CONTRACTS(){
 
 DELETE_TABLE_ENROLLMENTS(){
 	$PSQL "DROP TABLE enrollments;"
-	DELETE_DATABASE_MANAGEMENT_MENT "Dropped Table enrollments"
+	DELETE_DATABASE_MANAGEMENT "Dropped Table enrollments"
 }
 
 INSERT_DATA_MENU(){
