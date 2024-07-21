@@ -10,12 +10,13 @@ MAIN_MENU(){
    fi
    clear
    echo -e "\n~~~~~ PostgREST MedicareAPI Command Line Interface ~~~~~"
-   echo -e "\n0. Database Management Menu\n1. Exit Program\n"
+   echo -e "\n0. Database Management Menu\n1. Github Management\n2. Exit Program"
    echo "Enter Command: "
    read MAIN_MENU_SELECTION
    case $MAIN_MENU_SELECTION in
    0) DATABASE_MANAGEMENT_MENU ;;
-   1) EXIT ;;
+   1) GITHUB_MANAGEMENT_MENU ;;
+   2) EXIT ;;
    *) MAIN_MENU "Please enter a valid option." ;;
 esac
 }
@@ -40,6 +41,40 @@ DATABASE_MANAGEMENT_MENU(){
    6) UPDATE_DATA_MENU ;;
    *) DATABASE_MANAGEMENT_MENU "Please enter a valid option." ;;
 esac
+}
+
+GITHUB_MANAGEMENT_MENU(){
+   if [[ $1 ]]
+   then
+      echo -e "\n$1"
+   fi
+   clear
+   echo -e "\n~~~~~ Github Management Menu ~~~~~"
+   echo -e "\n0. Return to Main Menu\n1. git add app.sh\n2. git commit -m "Updated within CLI"\n3. git push -u origin HEAD\n"
+   echo "Enter Command: "
+   read GITHUB_MANAGEMENT_MENU_SELECTION
+   case $GITHUB_MANAGEMENT_MENU_SELECTION in
+   0) MAIN_MENU ;;
+   1) GITHUB_ADD ;;
+   2) GITHUB_COMMIT ;;
+   3) GITHUB_PUSH ;;
+   *) GITHUB_MANAGEMENT_MENU "Please enter a valid option." ;;
+esac
+}
+
+GITHUB_ADD(){
+	git add app.sh
+	GITHUB_MANAGEMENT_MENU
+}
+
+GITHUB_COMMITT(){
+	git commit -m "Committed from the command line"
+	GITHUB_MANAGEMENT_MENU
+}
+
+GITHUB_PUSH(){
+	git push -u origin HEAD
+	GITHUB_MANAGEMENT_MENU
 }
 
 LIST_SCHEMA_MENU(){
