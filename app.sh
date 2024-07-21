@@ -176,13 +176,14 @@ DELETE_DATABASE_MANAGEMENT_MENU(){
       echo -e "\n$1"
    fi
    echo -e "\n~~~~~ Delete Database & Tables Menu ~~~~~"
-   echo -e "\n0. Return To Database Management Menu\n1. Delete Database medicare\n2. Delete Table contracts"
+   echo -e "\n0. Return To Database Management Menu\n1. Delete Database medicare\n2. Delete Table contracts\n3. Delete Table enrollments"
    echo "Enter Command: "
    read DATABASE_MANAGEMENT_MENU_SELECTION
    case $DATABASE_MANAGEMENT_MENU_SELECTION in
    0) DATABASE_MANAGEMENT_MENU ;;
    1) DELETE_DATABASE ;;
    2) DELETE_TABLE_CONTRACTS ;;
+   3) DELETE_TABLE_ENROLLMENTS ;;
    *) DELETE_DATABASE_MANAGEMENT_MENU "Please enter a valid option." ;;
 esac
 }
@@ -208,7 +209,7 @@ INSERT_DATA_MENU(){
       echo -e "\n$1"
    fi
    echo -e "\n~~~~~ Insert Data Menu ~~~~~"
-   echo -e "\n0. Return To Database Management Menu\n1. Insert Example HSY Data\n"
+   echo -e "\n0. Return To Database Management Menu\n1. Insert 07/2024 Data\n"
    echo "Enter Command: "
    read DATABASE_MANAGEMENT_MENU_SELECTION
    case $DATABASE_MANAGEMENT_MENU_SELECTION in
@@ -233,7 +234,7 @@ INSERT_EXAMPLE_BIKES_DATA(){
 }
 
 IMPORT_EXAMPLE(){
-	psql -d medicare -U postgres -c "\copy enrollments from /home/MedicareAPI/csv/2022_06.csv delimiter ',' csv header;"
+	psql -d medicare -U postgres -c "\copy enrollments from /home/dude/MedicareAPI/csv/2024_07.csv delimiter ',' csv header;"
 }
 
 SELECT_DATA_MENU(){
