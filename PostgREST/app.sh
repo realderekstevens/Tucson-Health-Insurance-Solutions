@@ -67,7 +67,7 @@ GITHUB_ADD(){
 	GITHUB_MANAGEMENT_MENU
 }
 
-GITHUB_COMMITT(){
+GITHUB_COMMIT(){
 	git commit -m "Committed from the command line"
 	GITHUB_MANAGEMENT_MENU
 }
@@ -160,7 +160,7 @@ CREATE_TABLE_CONTRACTS(){
 CREATE_TABLE_ENROLLMENTS(){
 	$PSQL "CREATE TABLE enrollments();"
 	$PSQL "ALTER TABLE enrollments ADD COLUMN postgres_id SERIAL PRIMARY KEY;"
-	$PSQL "ALTER TABLE enrollments ADD COLUMN contract_number VARCHAR;"
+	$PSQL "ALTER TABLE enrollments ADD COLUMN contract_id VARCHAR;"
 	$PSQL "ALTER TABLE enrollments ADD COLUMN plan_id SMALLINT;"
 	$PSQL "ALTER TABLE enrollments ADD COLUMN ssa_state_county_code INT;"
 	$PSQL "ALTER TABLE enrollments ADD COLUMN fips_state_county_code INT;"
