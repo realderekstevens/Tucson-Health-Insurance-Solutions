@@ -160,10 +160,10 @@ CREATE_TABLE_CONTRACTS(){
 CREATE_TABLE_ENROLLMENTS(){
 	$PSQL "CREATE TABLE enrollments();"
 	$PSQL "ALTER TABLE enrollments ADD COLUMN postgres_id SERIAL PRIMARY KEY;"
-	$PSQL "ALTER TABLE enrollments ADD COLUMN contract_id VARCHAR;"
+	$PSQL "ALTER TABLE enrollments ADD COLUMN contract_id VARCHAR(10);"
 	$PSQL "ALTER TABLE enrollments ADD COLUMN plan_id SMALLINT;"
-	$PSQL "ALTER TABLE enrollments ADD COLUMN ssa_state_county_code INT;"
-	$PSQL "ALTER TABLE enrollments ADD COLUMN fips_state_county_code INT;"
+	$PSQL "ALTER TABLE enrollments ADD COLUMN ssa_state_county_code INT(10);"
+	$PSQL "ALTER TABLE enrollments ADD COLUMN fips_state_county_code INT(10);"
 	$PSQL "ALTER TABLE enrollments ADD COLUMN state VARCHAR(2);"
 	$PSQL "ALTER TABLE enrollments ADD COLUMN county VARCHAR(25);"
 	$PSQL "ALTER TABLE enrollments ADD COLUMN enrollment VARCHAR(100);"
@@ -214,6 +214,7 @@ INSERT_DATA_MENU(){
    case $DATABASE_MANAGEMENT_MENU_SELECTION in
    0) DATABASE_MANAGEMENT_MENU ;;
    1) INSERT_EXAMPLE_BIKES_DATA ;;
+   2) IMPORT_EXAMPLE ;;
    *) INSERT_DATA_MENU "Please enter a valid option." ;;
 esac
 }
@@ -229,6 +230,10 @@ INSERT_EXAMPLE_BIKES_DATA(){
 	$PSQL "INSERT INTO bikes (type, size) VALUES ('BMX', 20);"
 	$PSQL "INSERT INTO bikes (type, size) VALUES ('BMX', 21);"
 	DATABASE_MANAGEMENT_MENU "Inserted Example Bikes"
+}
+
+IMPORT_EXAMPLE(){
+	psql -d medicare -U postgres -c "\copy enrollments from /home/MedicareAPI/csv/2022_06.csv delimiter ',' csv header;"
 }
 
 SELECT_DATA_MENU(){
