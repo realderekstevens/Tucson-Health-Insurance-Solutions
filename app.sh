@@ -165,7 +165,7 @@ CREATE_TABLE_ENROLLMENTS(){
 	$PSQL "ALTER TABLE enrollments ADD COLUMN ssa_state_county_code VARCHAR(10);"
 	$PSQL "ALTER TABLE enrollments ADD COLUMN fips_state_county_code VARCHAR(10);"
 	$PSQL "ALTER TABLE enrollments ADD COLUMN state VARCHAR(2);"
-	$PSQL "ALTER TABLE enrollments ADD COLUMN county VARCHAR(25);"
+	$PSQL "ALTER TABLE enrollments ADD COLUMN county VARCHAR(50);"
 	$PSQL "ALTER TABLE enrollments ADD COLUMN enrollment VARCHAR(100);"
 	CREATE_DATABASE_AND_TABLES_MENU "Created Table enrollments & Altered"
 }
@@ -200,7 +200,7 @@ DELETE_TABLE_CONTRACTS(){
 
 DELETE_TABLE_ENROLLMENTS(){
 	$PSQL "DROP TABLE enrollments;"
-	DELETE_DATABASE_MANAGEMENT "Dropped Table enrollments"
+	DELETE_DATABASE_MANAGEMENT_MENU "Dropped Table enrollments"
 }
 
 INSERT_DATA_MENU(){
