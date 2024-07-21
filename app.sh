@@ -234,7 +234,7 @@ INSERT_EXAMPLE_BIKES_DATA(){
 }
 
 IMPORT_EXAMPLE(){
-	psql -d medicare -U postgres -c "\copy enrollments from /home/dude/MedicareAPI/csv/2024_07.csv delimiter ',' csv header;"
+	psql -d medicare -U postgres -c "\COPY enrollments(contract_id, plan_id, ssa_state_county_code, fips_state_county_code, state, county, enrollment) from /home/dude/MedicareAPI/csv/CPSC_Enrollment_Info_2024_07.csv delimiter ',' csv header;"
 }
 
 SELECT_DATA_MENU(){
