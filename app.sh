@@ -68,7 +68,7 @@ POSTGREST_MANAGEMENT_MENU(){
 	fi
 	clear
 	echo -e "\n~~~~~ PostgREST Management Menu ~~~~~"
-	echo -e "\n0.) Return to Main Menu\n"
+	echo -e "\n0.) Return to Main Menu\n1.) Create Schema api\n2.) Create Table api.todos\n3.) Create Role webanon\n4.) Create role Authenticator\n5.) Run PostgREST Tutorial\n"
 	echo "ENTER COMMAND: "
 	read POSTGREST_MANAGEMENT_MENU_SELECTION
 	case $POSTGREST_MANAGEMENT_MENU_SELECTION in
