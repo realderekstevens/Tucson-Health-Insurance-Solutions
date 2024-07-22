@@ -77,7 +77,6 @@ POSTGREST_MANAGEMENT_MENU(){
 esac
 }
 
-
 GITHUB_MANAGEMENT_MENU(){
    if [[ $1 ]]
    then
