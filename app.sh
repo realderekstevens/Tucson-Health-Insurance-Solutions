@@ -10,13 +10,15 @@ MAIN_MENU(){
    fi
    clear
    echo -e "\n~~~~~ PostgREST MedicareAPI Command Line Interface ~~~~~"
-   echo -e "\n0. Database Management Menu\n1. Github Management\n2. Exit Program"
-   echo "Enter Command: "
+   echo -e "\n0.) Database Management Menu\n1.) Github Management\n2.) PostgREST Management\n3.) Arch Linux Management\n4.) Exit Program"
+   echo -e "\nEnter Command: "
    read MAIN_MENU_SELECTION
    case $MAIN_MENU_SELECTION in
    0) DATABASE_MANAGEMENT_MENU ;;
    1) GITHUB_MANAGEMENT_MENU ;;
-   2) EXIT ;;
+   2) POSTGREST_MANAGEMENT_MENU ;;
+   3) ARCH_LINUX_MANAGEMENT_MENU ;;
+   4) EXIT ;;
    *) MAIN_MENU "Please enter a valid option." ;;
 esac
 }
@@ -42,6 +44,39 @@ DATABASE_MANAGEMENT_MENU(){
    *) DATABASE_MANAGEMENT_MENU "Please enter a valid option." ;;
 esac
 }
+
+ARCH_LINUX_MANAGEMENT_MENU(){
+	if [[ $1 ]]
+	then
+		echo -e "\n$1"
+	fi
+	clear
+	echo -e "\n~~~~~ Arch Linux Management Menu ~~~~~"
+	echo -e "\n0. Return to Main Menu\n"
+	echo "Enter Command: "
+	read ARCH_LINUX_MANAGEMENT_MENU_SELECTION
+	case $ARCH_LINUX_MANAGEMENT_MENU_SELECTION in
+	0) MAIN_MENU ;;
+	*) ARCH_LINUX_MANAGEMENT_MENU "Please enter a valid option." ;;
+esac
+}
+
+POSTGREST_MANAGEMENT_MENU(){
+	if [[ $1 ]]
+	then
+		echo -e "\n$1"
+	fi
+	clear
+	echo -e "\n~~~~~ PostgREST Management Menu ~~~~~"
+	echo -e "\n0.) Return to Main Menu\n"
+	echo "ENTER COMMAND: "
+	read POSTGREST_MANAGEMENT_MENU_SELECTION
+	case $POSTGREST_MANAGEMENT_MENU_SELECTION in
+	0) MAIN_MENU ;;
+	*) POSTGREST_MANAGEMENT_MENU "Please enter a valid option." ;;
+esac
+}
+
 
 GITHUB_MANAGEMENT_MENU(){
    if [[ $1 ]]
@@ -235,6 +270,7 @@ INSERT_EXAMPLE_BIKES_DATA(){
 
 IMPORT_EXAMPLE(){
 	psql -d medicare -U postgres -c "\COPY enrollments(contract_id, plan_id, ssa_state_county_code, fips_state_county_code, state, county, enrollment) from /home/dude/MedicareAPI/csv/CPSC_Enrollment_Info_2024_07.csv delimiter ',' csv header;"
+
 }
 
 SELECT_DATA_MENU(){
