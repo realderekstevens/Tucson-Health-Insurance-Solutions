@@ -118,9 +118,10 @@ POSTGREST_CREATE_ROLE_AUTHENTICATOR(){
 
 POSTGREST_CREATE_TUTORIAL_CONF(){
 	touch tutorial.conf
-	echo "db-uri = "postgres://authenticator:mysecretpassword@localhost:5432/postgres"
-		db-schemas = "api"
-		db-anon-role = "web_anon"" >> tutorial.conf
+	echo "db-uri = 'postgres://authenticator:mysecretpassword@localhost:5432/postgres'" >> tutorial.conf
+	echo "db-schemas = 'api'" >> tutorial.conf
+	echo "db-anon-role = 'web_anon'" >> tutorial.conf
+	echo "server-port = 80" >> tutorial.conf
 	sleep 2
 	POSTGREST_MANAGEMENT_MENU "Executed Command"
 }
