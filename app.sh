@@ -85,6 +85,7 @@ esac
 
 POSTGREST_CREATE_SCHEMA_API(){
 	psql -d medicare -U postgres -c "create schema api;"
+	sleep 2
 	POSTGREST_MANAGEMENT_MENU "Created Schema api;"
 }
 
@@ -93,19 +94,35 @@ POSTGREST_CREATE_TABLE_API_TODOS(){
 		done boolean not null default false,
 		task text not null,
 		due timestamptz);"
+	psql -d medicare -U postgres -c "insert into api.todos (task) values
+		('finish tutorial 0'), 
+		('pat self on back');"
+	sleep 2
 	POSTGREST_MANAGEMENT_MENU "Created table api.todos"
 }
 
 POSTGREST_CREATE_ROLE_WEBANON(){
-	echo "Placeholder"
+	psql -d medicare -U postgres -c "create role web_anon nologin;
+		grant usage on schema api to web_anon;
+		grant select on api.todos to web_anon;"
+	sleep 2
+	POSTGREST_MANAGEMENT_MENU "Executed Command"
 }
 
 POSTGREST_CREATE_ROLE_AUTHENTICATOR(){
-	echo "Placeholder"
+	psql -d medicare -U postgres -c "create role authenticator noinherit login password 'mysecretpassword';
+		grant web_anon to authenticator;"
+	sleep 2
+	POSTGREST_MANAGEMENT_MENU "Executed Command"
 }
 
 POSTGREST_CREATE_TUTORIAL_CONF(){
-	echo "Placeholder"
+	touch tutorial.conf
+	echo "db-uri = "postgres://authenticator:mysecretpassword@localhost:5432/postgres"
+		db-schemas = "api"
+		db-anon-role = "web_anon"" >> tutorial.conf
+	sleep 2
+	POSTGREST_MANAGEMENT_MENU "Executed Command"
 }
 
 POSTGREST_START_TUTORIAL_SERVER(){
