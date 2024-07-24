@@ -68,7 +68,7 @@ POSTGREST_MANAGEMENT_MENU(){
 	fi
 	clear
 	echo -e "\n~~~~~ PostgREST Management Menu ~~~~~"
-	echo -e "\n0.) Return to Main Menu\n1.) Create Schema 'api'\n2.) Create Table 'api.todos'\n3.) Create Role 'web_anon'\n4.) Create role 'authenticator'\n5.) Create 'tutorial.conf'\n6.) Run PostgREST Tutorial\n"
+	echo -e "\n0.) Return to Main Menu\n1.) Create Schema 'api'\n2.) Create Table 'api.todos'\n3.) Create Role 'web_anon'\n4.) Create role 'authenticator'\n5.) Create 'tutorial.conf'\n6.) Run PostgREST Tutorial\n7.) Create Role Todo User\n"
 	echo "ENTER COMMAND: "
 	read POSTGREST_MANAGEMENT_MENU_SELECTION
 	case $POSTGREST_MANAGEMENT_MENU_SELECTION in
@@ -79,6 +79,7 @@ POSTGREST_MANAGEMENT_MENU(){
 	4) POSTGREST_CREATE_ROLE_AUTHENTICATOR ;;
 	5) POSTGREST_CREATE_TUTORIAL_CONF ;;
 	6) POSTGREST_START_TUTORIAL_SERVER ;;
+	7) POSTGREST_CREATE_ROLE_TODO_USER ;;
 	*) POSTGREST_MANAGEMENT_MENU "Please enter a valid option." ;;
 esac
 }
@@ -128,6 +129,16 @@ POSTGREST_CREATE_TUTORIAL_CONF(){
 
 POSTGREST_START_TUTORIAL_SERVER(){
 	postgrest tutorial.conf
+}
+
+
+POSTGREST_CREATE_ROLE_TODO_USER(){
+	psql -d medicare -U postgres -c "create role todo_user nologin;
+	grant todo_user to authenticator;
+	grant usage on schema api to todo_user;
+	grant all on api.todos to todo_user;"
+	sleep 2
+	POSTGREST_MANAGEMENT_MENU "Executed Command"
 }
 
 GITHUB_MANAGEMENT_MENU(){
