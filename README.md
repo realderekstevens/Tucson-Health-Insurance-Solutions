@@ -46,3 +46,5 @@ psql -U postgres -d medicare -a -f 01_schema.sql
 psql -U postgres -d medicare -a -f 02_views.sql
 psql -U postgres -d medicare -a -f 03_data.sql
 ```
+
+# 4.) Start PostgREST Server
