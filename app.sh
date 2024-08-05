@@ -52,13 +52,18 @@ ARCH_LINUX_MANAGEMENT_MENU(){
 	fi
 	clear
 	echo -e "\n~~~~~ Arch Linux Management Menu ~~~~~"
-	echo -e "\n0. Return to Main Menu\n"
+	echo -e "\n0. Return to Main Menu\1.) pacman -Syu git ufw\n"
 	echo "Enter Command: "
 	read ARCH_LINUX_MANAGEMENT_MENU_SELECTION
 	case $ARCH_LINUX_MANAGEMENT_MENU_SELECTION in
 	0) MAIN_MENU ;;
+	1) INIT_SERVER ;;
 	*) ARCH_LINUX_MANAGEMENT_MENU "Please enter a valid option." ;;
 esac
+}
+
+INIT_SERVER(){
+	sudo pacman -Syu git ufw
 }
 
 POSTGREST_MANAGEMENT_MENU(){
