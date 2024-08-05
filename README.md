@@ -29,6 +29,7 @@ systemctl enable postgresql
 vim /var/lib/postgres/.psql_history
 wq
 chown postgres /var/lib/postgres/.psql_history
+'''
 
 # 2.) Copy the MakeFile, arch_pg_render--1.0, arch_pg_render.control
 ```
