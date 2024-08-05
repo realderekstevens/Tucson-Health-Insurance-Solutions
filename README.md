@@ -29,10 +29,10 @@ systemctl enable postgresql
 vim /var/lib/postgres/.psql_history
 wq
 chown postgres /var/lib/postgres/.psql_history
-'''
+```
 
 # 2.) Copy the MakeFile, arch_pg_render--1.0, arch_pg_render.control
-```
+```bash
 yay -Syu git
 cd ~/home/user
 git clone https://github.com/realderekstevens/arch_pg_render
@@ -41,8 +41,8 @@ sudo cp arch_pg_render.control /usr/share/postgresql/extension
 ```
 
 # 3.) execute the general database setup:
-'''
+```bash
 psql -U postgres -d medicare -a -f 01_schema.sql
 psql -U postgres -d medicare -a -f 02_views.sql
 psql -U postgres -d medicare -a -f 03_data.sql
-'''
+```
