@@ -3,7 +3,7 @@ import sqlite3
 from sqlmodel import SQLModel, create_engine
 from rich.console import Console
 
-SQLITE_FILE_NAME = "db.db"
+SQLITE_FILE_NAME = "medicare.db"
 SQLITE_URL = f"sqlite:///{SQLITE_FILE_NAME}"
 
 ENGINE = create_engine(SQLITE_URL, echo=True)
@@ -14,6 +14,25 @@ def create_db_and_tables():
     SQLModel.metadata.create_all(ENGINE)
 
 # Import Contracts
+def import_contract_2025_02():
+    connection = sqlite3.connect('medicare.db')
+    cursor = connection.cursor()
+    file = open('csv/CPSC_Contract_Info_2025_02.csv', encoding='cp1252')
+    contents = csv.reader(file)
+    insert_records = "INSERT INTO Contract_2025_02 (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    cursor.executemany(insert_records, contents)
+    connection.commit()
+    connection.close()
+
+def import_contract_2025_02():
+    connection = sqlite3.connect('medicare.db')
+    cursor = connection.cursor()
+    file = open('csv/CPSC_Contract_Info_2025_01.csv', encoding='cp1252')
+    contents = csv.reader(file)
+    insert_records = "INSERT INTO Contract_2025_01 (ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganization, ContractEffectiveDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    cursor.executemany(insert_records, contents)
+    connection.commit()
+    connection.close()
 
 def import_contract_2023_06():
     connection = sqlite3.connect('db.db')
