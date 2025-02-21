@@ -23,7 +23,7 @@ CREATE TABLE "CPSC_Enrollment_Info_2024_12" (
 	FIPSStateCountyCode VARCHAR(100),
 	State VARCHAR(2),
 	County VARCHAR(100),
-	Enrollment INTEGER );
+	Enrollment VARCHAR(100));
 
 CREATE TABLE "2024_12" (
 	ID VARCHAR(100),
