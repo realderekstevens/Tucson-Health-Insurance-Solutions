@@ -13,7 +13,7 @@ CREATE TABLE "CPSC_Contract_Info_2024_12" (
 	OrganizationName VARCHAR(100),
 	OrganizationMarketingName VARCHAR(100),
 	PlanName VARCHAR(100),
-	ParentOrganization,
+	ParentOrganization VARCHAR(100),
 	ContractEffectiveDate VARCHAR(100));
 
 CREATE TABLE "CPSC_Enrollment_Info_2024_12" (
@@ -37,7 +37,7 @@ CREATE TABLE "2024_12" (
 	OrganizationName VARCHAR(100),
 	OrganizationMarketingName VARCHAR(100),
 	PlanName VARCHAR(100),
-	ParentOrganization,
+	ParentOrganization VARCHAR(100),
 	ContractEffectiveDate VARCHAR(100);
 	State VARCHAR(2),
 	County VARCHAR(100),
@@ -48,7 +48,7 @@ FROM 'J:\medicare\CPSC_Contract_Info_2024_12.csv'
 DELIMITER ','
 CSV HEADER;
 
-COPY "CPSC_Enrollment_Info_2024_12"(ContractID, PlanID, State, County, Enrollment)
+COPY "CPSC_Enrollment_Info_2024_12"(ContractNumber, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment)
 FROM 'J:\medicare\CPSC_Enrollment_Info_2024_12.csv'
 DELIMITER ','
 CSV HEADER;
