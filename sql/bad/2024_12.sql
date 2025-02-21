@@ -14,7 +14,7 @@ CREATE TABLE "CPSC_Contract_Info_2024_12" (
 	OrganizationMarketingName VARCHAR(100),
 	PlanName VARCHAR(100),
 	ParentOrganization VARCHAR(100),
-	ContractEffectiveDate VARCHAR(100));
+	ContractEffectiveDate DATE);
 
 CREATE TABLE "CPSC_Enrollment_Info_2024_12" (
 	ContractNumber VARCHAR(10),
@@ -43,7 +43,7 @@ CREATE TABLE "2024_12" (
 	County VARCHAR(100),
 	Enrollment INTEGER );
 
-COPY "CPSC_Contract_Info_2024_12"(ContractID, PlanID, State, County, Enrollment)
+COPY "CPSC_Contract_Info_2024_12"(ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganzation, ContractEffectiveDate)
 FROM 'J:\medicare\CPSC_Contract_Info_2024_12.csv'
 DELIMITER ','
 CSV HEADER;
