@@ -1,6 +1,22 @@
-DROP TABLE IF EXISTS "enrollments";
+DROP TABLE IF EXISTS "CPSC_Contract_Info_2024_12";
+DROP TABLE IF EXISTS "CPSC_Enrollment_Info_2024_12";
+DROP TABLE IF EXISTS "2024_12";
 
-CREATE TABLE "enrollments" (
+CREATE TABLE "CPSC_Contract_Info_2024_12" (
+	ContractID VARCHAR(10),
+	PlanID INTEGER,
+	OrganizationType VARCHAR(2),
+	PlanType VARCHAR(100),
+	OffersPartD BOOL,
+	SNPPlan BOOL,
+	EGHP BOOL,
+	OrganizationName VARCHAR(100),
+	OrganizationMarketingName VARCHAR(100),
+	PlanName VARCHAR(100),
+	ParentOrganization,
+	ContractEffectiveDate VARCHAR(100);
+
+CREATE TABLE "CPSC_Enrollment_Info_2024_12" (
 	ContractID VARCHAR(10),
 	PlanID INTEGER,
 	State VARCHAR(2),
@@ -14,6 +30,6 @@ CSV HEADER;
 
 ALTER TABLE "enrollments" DROP COLUMN ssa;
 ALTER TABLE "enrollments" DROP COLUMN fips;
-ALTER TABLE "enrollments" ADD COLUMN "Date" DATE DEFAULT '2022-08-15' ;
+ALTER TABLE "enrollments" ADD COLUMN "Date" DATE DEFAULT '2025-02-01' ;
 ALTER TABLE "enrollments" ADD COLUMN "ID" text;
 UPDATE "enrollments" SET "ID" = ContractID || '' || PlanID;
