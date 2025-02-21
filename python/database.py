@@ -24,7 +24,7 @@ def import_contract_2025_02():
     connection.commit()
     connection.close()
 
-def import_contract_2025_02():
+def import_contract_2025_01():
     connection = sqlite3.connect('medicare.db')
     cursor = connection.cursor()
     file = open('csv/CPSC_Contract_Info_2025_01.csv', encoding='cp1252')
