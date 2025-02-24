@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS "CPSC_Contract_Info_2024_12";
 DROP TABLE IF EXISTS "CPSC_Enrollment_Info_2024_12";
 DROP TABLE IF EXISTS "2024_12";
 
+
 CREATE TABLE "CPSC_Contract_Info_2024_12" (
 	ContractID VARCHAR(10),
 	PlanID INTEGER,
@@ -21,6 +22,11 @@ FROM 'C:\medicare\csv\CPSC_Contract_Info_2024_12.csv'
 DELIMITER ','
 CSV HEADER;
 
+ALTER TABLE "CPSC_Contract_Info_2024_12" 
+ADD COLUMN "ID" text;
+UPDATE "CPSC_Enrollment_Info_2024_12" SET "ID" = ContractID || '' || PlanID;
+
+
 CREATE TABLE "CPSC_Enrollment_Info_2024_12" (
 	ContractNumber VARCHAR(10),
 	PlanID INTEGER,
@@ -34,6 +40,10 @@ COPY "CPSC_Enrollment_Info_2024_12"(ContractNumber, PlanID, SSAStateCountyCode, 
 FROM 'C:\medicare\csv\CPSC_Enrollment_Info_2024_12.csv'
 DELIMITER ','
 CSV HEADER;
+
+ALTER TABLE "CPSC_Enrollment_Info_2024_12" 
+ADD COLUMN "ID" text;
+UPDATE "CPSC_Enrollment_Info_2024_12" SET "ID" = ContractNumber || '' || PlanID;
 
 CREATE TABLE "2024_12" (
 	ContractID VARCHAR(10),
@@ -52,8 +62,10 @@ CREATE TABLE "2024_12" (
 	County VARCHAR(100),
 	Enrollment INTEGER );
 
+ALTER TABLE "2024_12" ADD COLUMN "ID" text;
+UPDATE "2024_12" SET "ID" = ContractID || '' || PlanID;
+
 ALTER TABLE "2024_12" DROP COLUMN SSAStateCountyCode;
 ALTER TABLE "2024_12" DROP COLUMN FIPSStateCountyCode;
 ALTER TABLE "2024_12" ADD COLUMN "Date" DATE DEFAULT '2024-12-01';
-ALTER TABLE "2024_12" ADD COLUMN "ID" text;
-UPDATE "2024_12" SET "ID" = ContractID || '' || PlanID;
+
