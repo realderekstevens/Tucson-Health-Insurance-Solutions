@@ -26,7 +26,6 @@ CREATE TABLE "CPSC_Enrollment_Info_2024_12" (
 	Enrollment VARCHAR(100));
 
 CREATE TABLE "2024_12" (
-	ID VARCHAR(100),
 	ContractID VARCHAR(10),
 	PlanID INTEGER,
 	OrganizationType VARCHAR(2),
@@ -53,8 +52,8 @@ FROM 'J:\medicare\CPSC_Enrollment_Info_2024_12.csv'
 DELIMITER ','
 CSV HEADER;
 
-ALTER TABLE "enrollments" DROP COLUMN ssa;
-ALTER TABLE "enrollments" DROP COLUMN fips;
-ALTER TABLE "enrollments" ADD COLUMN "Date" DATE DEFAULT '2024-12-01' ;
-ALTER TABLE "enrollments" ADD COLUMN "ID" text;
-UPDATE "enrollments" SET "ID" = ContractID || '' || PlanID;
+ALTER TABLE "2024_12" DROP COLUMN SSAStateCountyCode;
+ALTER TABLE "2024_12" DROP COLUMN FIPSStateCountyCode;
+ALTER TABLE "2024_12" ADD COLUMN "Date" DATE DEFAULT '2024-12-01';
+ALTER TABLE "2024_12" ADD COLUMN "ID" text;
+UPDATE "2024_12" SET "ID" = ContractID || '' || PlanID;
