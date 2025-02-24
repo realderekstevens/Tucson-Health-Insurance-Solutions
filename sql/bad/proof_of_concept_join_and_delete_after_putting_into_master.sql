@@ -16,7 +16,7 @@ FROM 'J:\medicare\csv_big\CPSC_Enrollment_Info_2022_09.csv'
 DELIMITER ','
 CSV HEADER;
 
-DELETE FROM "2022_09" WHERE enrolled = '*';
+UPDATE "2022_09" SET enrolled = replace (enrolled, '*', '0')
 ALTER TABLE "2022_09" ALTER COLUMN enrolled TYPE INTEGER USING (enrolled::integer);
 ALTER TABLE "2022_09" DROP COLUMN ssa;
 ALTER TABLE "2022_09" DROP COLUMN fips;
