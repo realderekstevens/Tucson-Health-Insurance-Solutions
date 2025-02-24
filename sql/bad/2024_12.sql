@@ -16,6 +16,11 @@ CREATE TABLE "CPSC_Contract_Info_2024_12" (
 	ParentOrganization VARCHAR(100),
 	ContractEffectiveDate DATE);
 
+COPY "CPSC_Contract_Info_2024_12"(ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganzation, ContractEffectiveDate)
+FROM 'C:\medicare\csv\CPSC_Contract_Info_2024_12.csv'
+DELIMITER ','
+CSV HEADER;
+
 CREATE TABLE "CPSC_Enrollment_Info_2024_12" (
 	ContractNumber VARCHAR(10),
 	PlanID INTEGER,
@@ -24,6 +29,11 @@ CREATE TABLE "CPSC_Enrollment_Info_2024_12" (
 	State VARCHAR(2),
 	County VARCHAR(100),
 	Enrollment VARCHAR(100));
+
+COPY "CPSC_Enrollment_Info_2024_12"(ContractNumber, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment)
+FROM 'C:\medicare\csv\CPSC_Enrollment_Info_2024_12.csv'
+DELIMITER ','
+CSV HEADER;
 
 CREATE TABLE "2024_12" (
 	ContractID VARCHAR(10),
@@ -41,16 +51,6 @@ CREATE TABLE "2024_12" (
 	State VARCHAR(2),
 	County VARCHAR(100),
 	Enrollment INTEGER );
-
-COPY "CPSC_Contract_Info_2024_12"(ContractID, PlanID, OrganizationType, PlanType, OffersPartD, SNPPlan, EGHP, OrganizationName, OrganizationMarketingName, PlanName, ParentOrganzation, ContractEffectiveDate)
-FROM 'J:\medicare\CPSC_Contract_Info_2024_12.csv'
-DELIMITER ','
-CSV HEADER;
-
-COPY "CPSC_Enrollment_Info_2024_12"(ContractNumber, PlanID, SSAStateCountyCode, FIPSStateCountyCode, State, County, Enrollment)
-FROM 'J:\medicare\CPSC_Enrollment_Info_2024_12.csv'
-DELIMITER ','
-CSV HEADER;
 
 ALTER TABLE "2024_12" DROP COLUMN SSAStateCountyCode;
 ALTER TABLE "2024_12" DROP COLUMN FIPSStateCountyCode;
