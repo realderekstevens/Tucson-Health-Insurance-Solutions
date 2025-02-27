@@ -2,7 +2,6 @@ DROP TABLE IF EXISTS "CPSC_Contract_Info_2024_12";
 DROP TABLE IF EXISTS "CPSC_Enrollment_Info_2024_12";
 DROP TABLE IF EXISTS "2024_12";
 
-
 CREATE TABLE "CPSC_Contract_Info_2024_12" (
 	ContractID VARCHAR(10),
 	PlanID INTEGER,
@@ -25,7 +24,6 @@ CSV HEADER;
 ALTER TABLE "CPSC_Contract_Info_2024_12" 
 ADD COLUMN "ID" text;
 UPDATE "CPSC_Enrollment_Info_2024_12" SET "ID" = ContractID || '' || PlanID;
-
 
 CREATE TABLE "CPSC_Enrollment_Info_2024_12" (
 	ContractNumber VARCHAR(10),
