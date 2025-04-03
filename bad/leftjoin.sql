@@ -1,1 +1,0 @@
-SELECT * FROM master LEFT JOIN contracts_2022_09 ON contracts_2022_09.contractid = master.contractid ORDER BY enrolled DESC;

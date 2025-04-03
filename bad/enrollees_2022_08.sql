@@ -1,1 +1,0 @@
-select sum(enrollment) FROM "2022_06"

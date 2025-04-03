@@ -1,1 +1,0 @@
-SELECT SUM(enrollment) FROM enrollment WHERE County = "Pima";

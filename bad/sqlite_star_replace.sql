@@ -1,1 +1,0 @@
-UPDATE CPSC_Enrollment_Info_2022_10 SET Enrollment = replace(Enrollment,'*','0');

@@ -1,1 +1,0 @@
-ALTER TABLE "enrollments" ALTER COLUMN date TYPE DATE USING (date::DATE);
