@@ -10,83 +10,60 @@ MAIN_MENU(){
     --margin ".5" \
     --padding "1 2" \
     --border-foreground "#04B575" \
-    "Welcome to" "     HealthcareAPI"
-  OPTIONS=$(gum choose --header "Main Menu: " "Query" "Database" "Github" "PostgREST" "Arch Linux" "Exit")
+    "Welcome to" "     HealthcareCLI"
+  OPTIONS=$(gum choose --header "Main Menu: " "Query" "Database" "Git" "PostgREST" "Arch Linux" "Exit")
     case "$OPTIONS" in
-     "Query")
-        MAIN_MENU
-        ;;
-     "Database")
-        gum spin -s line --title "Accessing Database Management Menu . . ." -- sleep 1
-        # Add your query logic here
-        DATABASE_MANAGEMENT_MENU
-        ;;
-     "Github")
-        gum spin -s line --title "Accessing Github Management Menu . . ." -- sleep 1
-        # Add your query logic here
-        GITHUB_MANAGEMENT_MENU
-        ;;
-     "PostgREST")
-        gum spin -s line --title "Accessing Postgrest Management Menu . . ." -- sleep 1
-        # Add your query logic here
-        POSTGREST_MANAGEMENT_MENU
-        ;;
-     "Arch Linux")
-        gum spin -s line --title "Accessing Arch Gnu/Linux Management Menu . . ." -- sleep 1
-        # Add your query logic here
-        ARCH_LINUX_MANAGEMENT_MENU
-        ;;
-     "Exit")
-        EXIT
-        ;;
+     "Query") MAIN_MENU ;;
+     "Database") DATABASE_MANAGEMENT_MENU ;;
+     "Git") GITHUB_MANAGEMENT_MENU ;;
+     "PostgREST") POSTGREST_MANAGEMENT_MENU ;;
+     "Arch Linux") ARCH_LINUX_MANAGEMENT_MENU ;;
+     "Exit") EXIT ;;
     esac
 }
 
 ##### ##### ##### ##### #####
 
 DATABASE_MANAGEMENT_MENU(){
-   if [[ $1 ]]
-   then
-      echo -e "\n$1"
-   fi
-   clear
-   echo -e "\n~~~~~ PostgREST Management Menu ~~~~~"
-   echo -e "\n0. Return To Main Menu\n1. List Schema Menu\n2. Create Databases & Tables Menu\n3. Delete Databases & Tables Menu\n4. Insert Data Menu\n5. Select Data Menu\n6. Update Contracts Menu\n"
-   echo "Enter Command: "
-   read DATABASE_MANAGEMENT_MENU_SELECTION
-   case $DATABASE_MANAGEMENT_MENU_SELECTION in
-   0) MAIN_MENU ;;
-   1) LIST_SCHEMA_MENU ;;
-   2) CREATE_DATABASE_AND_TABLES_MENU ;;
-   3) DELETE_DATABASE_MANAGEMENT_MENU ;;
-   4) INSERT_DATA_MENU ;;
-   5) SELECT_DATA_MENU ;;
-   6) UPDATE_DATA_MENU ;;
-   *) DATABASE_MANAGEMENT_MENU "Please enter a valid option." ;;
-esac
+  clear
+  gum style \
+    --border thick \
+    --margin ".5" \
+    --padding "1 2" \
+    --border-foreground "#04B575" \
+    "Database Management Menu"
+  OPTIONS=$(gum choose --header "Database & Table Management Menu: " "Return to Main Menu" "Schemas" "Create" "Delete" "Insert" "Select" "Update")
+    case "$OPTIONS" in
+     "Return to Main Menu") MAIN_MENU ;;
+     "Schemas") LIST_SCHEMA_MENU ;;
+     "Create") CREATE_DATABASE_AND_TABLES_MENU ;;
+     "Delete") DELETE_DATABASE_MANAGEMENT_MENU ;;
+     "Insert") INSERT_DATA_MENU ;;
+     "Select") SELECT_DATA_MENU ;;
+     "Update") UPDATE_DATA_MENU ;;
+    esac
 }
 
 ##### #####
 
 ARCH_LINUX_MANAGEMENT_MENU(){
-	if [[ $1 ]]
-	then
-		echo -e "\n$1"
-	fi
 	clear
-	echo -e "\n~~~~~ Arch Linux Management Menu ~~~~~"
-	echo -e "\n0. Return to Main Menu\1.) pacman -Syu git ufw\n"
-	echo "Enter Command: "
-	read ARCH_LINUX_MANAGEMENT_MENU_SELECTION
-	case $ARCH_LINUX_MANAGEMENT_MENU_SELECTION in
-	0) MAIN_MENU ;;
-	1) INIT_SERVER ;;
-	*) ARCH_LINUX_MANAGEMENT_MENU "Please enter a valid option." ;;
-esac
+  gum style \
+    --border thick \
+    --margin ".5" \
+    --padding "1 2" \
+    --border-foreground "#04B575" \
+    "Database Management Menu"
+  OPTIONS=$(gum choose --header "Database & Table Management Menu: " "Return to Main Menu" "System-Wide Update")
+    case "$OPTIONS" in
+     "Return to Main Menu") MAIN_MENU ;;
+     "System Update") ARCH_SYSTEM_UPDATE ;;
+    esac
 }
 
-INIT_SERVER(){
-	sudo pacman -Syu git ufw
+ARCH_SYSTEM_UPDATE(){
+  pacman -Syu
+  ARCH_LINUX_MANAGEMENT_MENU
 }
 
 ##### ##### ##### ##### #####
