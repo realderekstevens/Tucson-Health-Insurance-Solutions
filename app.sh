@@ -4,24 +4,45 @@ PSQL="psql -X --username=postgres --dbname=medicare --tuples-only -c"
 PSQL_CreateDatabase="psql -X --username=postgres --dbname=postgres --tuples-only -c"
 
 MAIN_MENU(){
-   if [[ $1 ]]
-   then
-      echo -e "\n$1"
-   fi
-   clear
-   echo -e "\n~~~~~ PostgREST MedicareAPI Command Line Interface ~~~~~"
-   echo -e "\n0.) Database Management Menu\n1.) Github Management\n2.) PostgREST Management\n3.) Arch Linux Management\n4.) Exit Program"
-   echo -e "\nEnter Command: "
-   read MAIN_MENU_SELECTION
-   case $MAIN_MENU_SELECTION in
-   0) DATABASE_MANAGEMENT_MENU ;;
-   1) GITHUB_MANAGEMENT_MENU ;;
-   2) POSTGREST_MANAGEMENT_MENU ;;
-   3) ARCH_LINUX_MANAGEMENT_MENU ;;
-   4) EXIT ;;
-   *) MAIN_MENU "Please enter a valid option." ;;
-esac
+  clear
+  gum style \
+    --border thick \
+    --margin ".5" \
+    --padding "1 2" \
+    --border-foreground "#04B575" \
+    "Welcome to" "     HealthcareAPI"
+  OPTIONS=$(gum choose --header "Main Menu: " "Query" "Database" "Github" "PostgREST" "Arch Linux" "Exit")
+    case "$OPTIONS" in
+     "Query")
+        MAIN_MENU
+        ;;
+     "Database")
+        gum spin -s line --title "Accessing Database Management Menu . . ." -- sleep 1
+        # Add your query logic here
+        DATABASE_MANAGEMENT_MENU
+        ;;
+     "Github")
+        gum spin -s line --title "Accessing Github Management Menu . . ." -- sleep 1
+        # Add your query logic here
+        GITHUB_MANAGEMENT_MENU
+        ;;
+     "PostgREST")
+        gum spin -s line --title "Accessing Postgrest Management Menu . . ." -- sleep 1
+        # Add your query logic here
+        POSTGREST_MANAGEMENT_MENU
+        ;;
+     "Arch Linux")
+        gum spin -s line --title "Accessing Arch Gnu/Linux Management Menu . . ." -- sleep 1
+        # Add your query logic here
+        ARCH_LINUX_MANAGEMENT_MENU
+        ;;
+     "Exit")
+        EXIT
+        ;;
+    esac
 }
+
+##### ##### ##### ##### #####
 
 DATABASE_MANAGEMENT_MENU(){
    if [[ $1 ]]
@@ -45,6 +66,8 @@ DATABASE_MANAGEMENT_MENU(){
 esac
 }
 
+##### #####
+
 ARCH_LINUX_MANAGEMENT_MENU(){
 	if [[ $1 ]]
 	then
@@ -65,6 +88,8 @@ esac
 INIT_SERVER(){
 	sudo pacman -Syu git ufw
 }
+
+##### ##### ##### ##### #####
 
 POSTGREST_MANAGEMENT_MENU(){
 	if [[ $1 ]]
@@ -146,6 +171,8 @@ POSTGREST_CREATE_ROLE_TODO_USER(){
 	POSTGREST_MANAGEMENT_MENU "Executed Command"
 }
 
+##### ##### ##### ##### ##### 
+
 GITHUB_MANAGEMENT_MENU(){
    if [[ $1 ]]
    then
@@ -179,6 +206,8 @@ GITHUB_PUSH(){
 	git push -u origin HEAD
 	GITHUB_MANAGEMENT_MENU
 }
+
+##### ##### ##### ##### #####
 
 LIST_SCHEMA_MENU(){
    if [[ $1 ]]
@@ -218,6 +247,8 @@ LIST_TABLE_ENROLLMENTS(){
 	$PSQL "\d enrollments"
 	LIST_SCHEMA_MENU "Listed Table enrollments"
 }
+
+##### ##### ##### ##### #####
 
 CREATE_DATABASE_AND_TABLES_MENU(){
    if [[ $1 ]]
@@ -273,6 +304,8 @@ CREATE_TABLE_ENROLLMENTS(){
 	CREATE_DATABASE_AND_TABLES_MENU "Created Table enrollments & Altered"
 }
 
+##### ##### ##### ##### #####
+
 DELETE_DATABASE_MANAGEMENT_MENU(){
    if [[ $1 ]]
    then
@@ -305,6 +338,8 @@ DELETE_TABLE_ENROLLMENTS(){
 	$PSQL "DROP TABLE enrollments;"
 	DELETE_DATABASE_MANAGEMENT_MENU "Dropped Table enrollments"
 }
+
+##### ##### ##### ##### #####
 
 INSERT_DATA_MENU(){
    if [[ $1 ]]
@@ -341,6 +376,8 @@ IMPORT_EXAMPLE(){
 
 }
 
+##### ##### ##### ##### #####
+
 SELECT_DATA_MENU(){
    if [[ $1 ]]
    then
@@ -362,6 +399,8 @@ SELECT_ALL_BIKES(){
 	echo "$AVAILABLE_BIKES"
 	SELECT_DATA_MENU
 }
+
+##### ##### ##### ##### #####
 
 UPDATE_DATA_MENU(){
    if [[ $1 ]]
@@ -395,6 +434,8 @@ UPDATE_ALL_BIKES_UNAVAILABLE(){
 	AVAILABLE_BIKES=$($PSQL "UPDATE bikes SET AVAILABLE = false;")
 	UPDATE_DATA_MENU
 }
+
+##### ##### ##### ##### #####
 
 EXIT(){
    echo -e "\nClosing Program.\n"
