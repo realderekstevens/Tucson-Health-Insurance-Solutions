@@ -11,8 +11,9 @@ MAIN_MENU(){
     --padding "1 2" \
     --border-foreground "#04B575" \
     "Welcome to" "     HealthcareCLI"
-  OPTIONS=$(gum choose --header "Main Menu: " "Query" "Database" "Git" "PostgREST" "Arch Linux" "Exit")
+  OPTIONS=$(gum choose --header "Main Menu: " "Importer" "Query" "Database" "Git" "PostgREST" "Arch Linux" "Exit")
     case "$OPTIONS" in
+     "Importer") IMPORTER_MENU ;;
      "Query") MAIN_MENU ;;
      "Database") DATABASE_MANAGEMENT_MENU ;;
      "Git") GITHUB_MANAGEMENT_MENU ;;
@@ -22,7 +23,52 @@ MAIN_MENU(){
     esac
 }
 
-##### ##### ##### ##### #####
+##### ##### IMPORTER ##### #####
+
+IMPORTER_MENU(){
+  clear
+  gum style \
+    --border thick \
+    --margin ".5" \
+    --padding "1 2" \
+    --border-foreground "#04B575" \
+    "Data Import Menu"
+  OPTIONS=$(gum choose --header "Expiditied Testing Importer Menu: " \
+    "Return to Main Menu" \
+    "Drop Table Master" \
+    "Drop Table Contracts 06.15.2025" \
+    "Drop Table Enrollments 06.15.2025" \
+    "Create Table Master" \
+    "Create Table Contracts 06.15.2025" \
+    "Create Table Enrollments 06.15.2025" \
+    "Download monthly-enrollment-cpsc-2025-06.zip" \
+    "Unzip monthly-enrollment-cpsc-2025-06.zip" \
+    "Upload CPSC_Contract_Info_2025_06.csv" \
+    "Upload CPSC_Enrollment_Info_2025_06.csv" \
+    "Cross Merge into Master" \
+    "Delete CPSC_Contract_Info_2025_06.csv" \
+    "Delete CPSC_Enrollment_Info_2025_06.csv" \
+    "Delete monthly-enrollment-cpsc-2025-06.zip")
+    case "$OPTIONS" in
+     "Return to Main Menu") MAIN_MENU ;;
+     "Drop Table Master") MAIN_MENU ;; 
+     "Drop Table Contracts 06.15.2025") MAIN_MENU ;;
+     "Drop Table Enrollments 06.15.2025") MAIN_MENU ;;
+     "Create Table Master") MAIN_MENU ;;
+     "Create Table Contracts Schema 06.15.2025") MAIN_MENU ;;
+     "Create Table Enrollments Schema 06.15.2025") MAIN_MENU ;;
+     "Download monthly-enrollment-cpsc-2025-06.zip") MAIN_MENU ;;
+     "UNZIP monthly-enrollment-cpsc-2025-06.zip") MAIN_MENU ;;
+     "UPLOAD CPSC_Contract_Info_2025_06") MAIN_MENU ;;
+     "UPLOAD CPSC_Enrollment_Info_2025_06") MAIN_MENU ;;
+     "Cross Merge into Master") MAIN_MENU ;;
+     "DELETE CPSC_Contract_Info_2025_06.csv") MAIN_MENU ;;
+     "DELETE CPSC_Enrollment_Info_2025_06.csv") MAIN_MENU ;;
+     "DELETE monthly-enrollment-cpsc-2025-06.zip") MAIN_MENU ;;
+    esac
+}
+
+##### ##### DATABASE ##### #####
 
 DATABASE_MANAGEMENT_MENU(){
   clear
@@ -44,7 +90,7 @@ DATABASE_MANAGEMENT_MENU(){
     esac
 }
 
-##### #####
+##### ##### LINUX ##### #####
 
 ARCH_LINUX_MANAGEMENT_MENU(){
 	clear
@@ -148,25 +194,23 @@ POSTGREST_CREATE_ROLE_TODO_USER(){
 	POSTGREST_MANAGEMENT_MENU "Executed Command"
 }
 
-##### ##### ##### ##### ##### 
+##### ########## ##### ##### ##### #####
 
 GITHUB_MANAGEMENT_MENU(){
-   if [[ $1 ]]
-   then
-      echo -e "\n$1"
-   fi
-   clear
-   echo -e "\n~~~~~ Github Management Menu ~~~~~"
-   echo -e "\n0. Return to Main Menu\n1. git add app.sh\n2. git commit -m "Updated within CLI"\n3. git push -u origin HEAD\n"
-   echo "Enter Command: "
-   read GITHUB_MANAGEMENT_MENU_SELECTION
-   case $GITHUB_MANAGEMENT_MENU_SELECTION in
-   0) MAIN_MENU ;;
-   1) GITHUB_ADD ;;
-   2) GITHUB_COMMIT ;;
-   3) GITHUB_PUSH ;;
-   *) GITHUB_MANAGEMENT_MENU "Please enter a valid option." ;;
-esac
+  clear
+  gum style \
+    --border thick \
+    --margin ".5" \
+    --padding "1 2" \
+    --border-foreground "#04B575" \
+    "Database Management Menu"
+  OPTIONS=$(gum choose --header "Github Management Menu: " "Return to Main Menu" "Commit" "Push")
+    case "$OPTIONS" in
+     "Return to Main Menu") MAIN_MENU ;;
+     "Add app.sh") GITHUB_ADD ;;
+     "Commit") GITHUB_COMMIT ;;
+     "Push") GITHUB_PUSH ;;
+    esac
 }
 
 GITHUB_ADD(){
