@@ -35,6 +35,7 @@ IMPORTER_MENU(){
     "Data Import Menu"
   OPTIONS=$(gum choose --header "Expiditied Testing Importer Menu: " \
     "Return to Main Menu" \
+    "Drop Database Medicare" \
     "Drop Table Master" \
     "Drop Table Contracts 06.15.2025" \
     "Drop Table Enrollments 06.15.2025" \
@@ -50,10 +51,11 @@ IMPORTER_MENU(){
     "Delete CPSC_Enrollment_Info_2025_06.csv" \
     "Delete monthly-enrollment-cpsc-2025-06.zip")
     case "$OPTIONS" in
+     "Drop Database Medicare") DELETE_DATABASE ;;
      "Return to Main Menu") MAIN_MENU ;;
      "Drop Table Master") MAIN_MENU ;; 
-     "Drop Table Contracts 06.15.2025") MAIN_MENU ;;
-     "Drop Table Enrollments 06.15.2025") MAIN_MENU ;;
+     "Drop Table Contracts 06.15.2025") DELETE_TABLE_CONTRACTS ;;
+     "Drop Table Enrollments 06.15.2025") DELETE_TABLE_ENROLLMENTS ;;
      "Create Table Master") MAIN_MENU ;;
      "Create Table Contracts Schema 06.15.2025") MAIN_MENU ;;
      "Create Table Enrollments Schema 06.15.2025") MAIN_MENU ;;
@@ -67,6 +69,51 @@ IMPORTER_MENU(){
      "DELETE monthly-enrollment-cpsc-2025-06.zip") MAIN_MENU ;;
     esac
 }
+
+INSERT_DATA_MENU(){
+   if [[ $1 ]]
+   then
+      echo -e "\n$1"
+   fi
+   echo -e "\n~~~~~ Insert Data Menu ~~~~~"
+   echo -e "\n0. Return To Database Management Menu\n1. Insert 07/2024 Data\n"
+   echo "Enter Command: "
+   read DATABASE_MANAGEMENT_MENU_SELECTION
+   case $DATABASE_MANAGEMENT_MENU_SELECTION in
+   0) DATABASE_MANAGEMENT_MENU ;;
+   1) INSERT_EXAMPLE_BIKES_DATA ;;
+   2) IMPORT_EXAMPLE ;;
+   *) INSERT_DATA_MENU "Please enter a valid option." ;;
+esac
+}
+
+INSERT_EXAMPLE_BIKES_DATA(){
+	$PSQL "INSERT INTO bikes (type, size) VALUES ('Mountain', 27);"
+	$PSQL "INSERT INTO bikes (type, size) VALUES ('Mountain', 28);"
+	$PSQL "INSERT INTO bikes (type, size) VALUES ('Mountain', 29);"
+	$PSQL "INSERT INTO bikes (type, size) VALUES ('Road', 27);"
+	$PSQL "INSERT INTO bikes (type, size) VALUES ('Road', 28);"
+	$PSQL "INSERT INTO bikes (type, size) VALUES ('Road', 29);"
+	$PSQL "INSERT INTO bikes (type, size) VALUES ('BMX', 19);"
+	$PSQL "INSERT INTO bikes (type, size) VALUES ('BMX', 20);"
+	$PSQL "INSERT INTO bikes (type, size) VALUES ('BMX', 21);"
+	DATABASE_MANAGEMENT_MENU "Inserted Example Bikes"
+}
+
+IMPORT_EXAMPLE(){
+	psql -d medicare -U postgres -c "\COPY enrollments(contract_id, plan_id, ssa_state_county_code, fips_state_county_code, state, county, enrollment) from /home/dude/MedicareAPI/csv/CPSC_Enrollment_Info_2024_07.csv delimiter ',' csv header;"
+}
+
+IMPORT_ENROLLMENTS_2025_06(){
+  psql -d medicare -U postgres -c "\COPY enrollments(contract_id, plan_id, ssa_state_county_code, fips_state_county_code, state, county, enrollment) from /home/dude/Github/MedicareAPI/csv/CPSC_Enrollment_Info_2025_06.csv delimiter ',' csv header;"
+}
+
+IMPORT_CONTRACTS_2025_06(){
+  psql -d medicare -U postgres -c "\COPY contracts(contract_id, plan_id, ssa_state_county_code, fips_state_county_code, state, county, enrollment) from /home/dude/Github/MedicareAPI/csv/CPSC_Contract_Info_2025_06.csv delimiter ',' csv header;"
+}
+
+
+
 
 ##### ##### DATABASE ##### #####
 
@@ -360,42 +407,9 @@ DELETE_TABLE_ENROLLMENTS(){
 	DELETE_DATABASE_MANAGEMENT_MENU "Dropped Table enrollments"
 }
 
-##### ##### ##### ##### #####
+##### ##### INSERT / IMPORT ##### #####
 
-INSERT_DATA_MENU(){
-   if [[ $1 ]]
-   then
-      echo -e "\n$1"
-   fi
-   echo -e "\n~~~~~ Insert Data Menu ~~~~~"
-   echo -e "\n0. Return To Database Management Menu\n1. Insert 07/2024 Data\n"
-   echo "Enter Command: "
-   read DATABASE_MANAGEMENT_MENU_SELECTION
-   case $DATABASE_MANAGEMENT_MENU_SELECTION in
-   0) DATABASE_MANAGEMENT_MENU ;;
-   1) INSERT_EXAMPLE_BIKES_DATA ;;
-   2) IMPORT_EXAMPLE ;;
-   *) INSERT_DATA_MENU "Please enter a valid option." ;;
-esac
-}
 
-INSERT_EXAMPLE_BIKES_DATA(){
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('Mountain', 27);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('Mountain', 28);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('Mountain', 29);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('Road', 27);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('Road', 28);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('Road', 29);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('BMX', 19);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('BMX', 20);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('BMX', 21);"
-	DATABASE_MANAGEMENT_MENU "Inserted Example Bikes"
-}
-
-IMPORT_EXAMPLE(){
-	psql -d medicare -U postgres -c "\COPY enrollments(contract_id, plan_id, ssa_state_county_code, fips_state_county_code, state, county, enrollment) from /home/dude/MedicareAPI/csv/CPSC_Enrollment_Info_2024_07.csv delimiter ',' csv header;"
-
-}
 
 ##### ##### ##### ##### #####
 
