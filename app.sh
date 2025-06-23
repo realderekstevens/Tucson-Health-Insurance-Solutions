@@ -96,7 +96,7 @@ IMPORT_ENROLLMENTS_2025_06(){
 }
 
 IMPORT_CONTRACTS_2025_06(){
-  psql -d medicare -U postgres -c "\COPY contracts(contract_id, plan_id, ssa_state_county_code, fips_state_county_code, state, county, enrollment) from /home/dude/CPSC_Contract_Info_2025_06.csv delimiter ',' csv header;"
+  psql -d medicare -U postgres -c "\COPY contracts(contract_id, plan_id, organization_type, plan_type, offers_part_d, snp_plan, eghp, organization_name, organization_marketing_name, plan_name, parent_organization, contract_effective_date) from /home/dude/CPSC_Contract_Info_2025_06.csv delimiter ',' csv header;"
 }
 
 UNZIP_CPSC_ENROLLMENT_2025_06(){
@@ -127,7 +127,7 @@ CREATE_TABLE_CONTRACTS() {
     $PSQL "CREATE TABLE contracts();"
     $PSQL "ALTER TABLE contracts ADD COLUMN postgres_id SERIAL PRIMARY KEY;"
     $PSQL "ALTER TABLE contracts ADD COLUMN contract_id VARCHAR(10);"
-    $PSQL "ALTER TABLE contracts ADD COLUMN plan_id SMALLINT;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN plan_id VARCHAR(10);"
     $PSQL "ALTER TABLE contracts ADD COLUMN organization_type VARCHAR;"
     $PSQL "ALTER TABLE contracts ADD COLUMN plan_type VARCHAR;"
     $PSQL "ALTER TABLE contracts ADD COLUMN offers_part_d BOOLEAN;"
@@ -137,7 +137,7 @@ CREATE_TABLE_CONTRACTS() {
     $PSQL "ALTER TABLE contracts ADD COLUMN organization_marketing_name VARCHAR;"
     $PSQL "ALTER TABLE contracts ADD COLUMN plan_name VARCHAR;"
     $PSQL "ALTER TABLE contracts ADD COLUMN parent_organization VARCHAR;"
-    $PSQL "ALTER TABLE contracts ADD COLUMN contract_effective_date DATE;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN contract_effective_date VARCHAR;"
     echo "Created Tables contracts & Altered"
 }
 
@@ -145,7 +145,7 @@ CREATE_TABLE_ENROLLMENTS() {
     $PSQL "CREATE TABLE enrollments();"
     $PSQL "ALTER TABLE enrollments ADD COLUMN postgres_id SERIAL PRIMARY KEY;"
     $PSQL "ALTER TABLE enrollments ADD COLUMN contract_id VARCHAR(10);"
-    $PSQL "ALTER TABLE enrollments ADD COLUMN plan_id SMALLINT;"
+    $PSQL "ALTER TABLE enrollments ADD COLUMN plan_id VARCHAR(10);"
     $PSQL "ALTER TABLE enrollments ADD COLUMN ssa_state_county_code VARCHAR(10);"
     $PSQL "ALTER TABLE enrollments ADD COLUMN fips_state_county_code VARCHAR(10);"
     $PSQL "ALTER TABLE enrollments ADD COLUMN state VARCHAR(2);"
@@ -154,18 +154,12 @@ CREATE_TABLE_ENROLLMENTS() {
     echo "Created Table enrollments & Altered"
 }
 
-CHECK_IF_TABLE_POPULATED() {
-  if [ $($PSQL "SELECT COUNT(*) FROM CONTRACTS;") -eq 0]; then
-    echo "Error: contracts table is empty"
-    exit 1
-  fi
-}
 
 MERGE_TABLES() {
     $PSQL "CREATE TABLE merged_contracts_enrollments (
         primary_id VARCHAR(50),
         contract_id VARCHAR(10),
-        plan_id SMALLINT,
+        plan_id VARCHAR(10),
         organization_type VARCHAR,
         plan_type VARCHAR,
         offers_part_d BOOLEAN,
@@ -175,7 +169,7 @@ MERGE_TABLES() {
         organization_marketing_name VARCHAR,
         plan_name VARCHAR,
         parent_organization VARCHAR,
-        contract_effective_date DATE,
+        contract_effective_date VARCHAR,
         ssa_state_county_code VARCHAR(10),
         fips_state_county_code VARCHAR(10),
         state VARCHAR(2),
@@ -221,8 +215,6 @@ DO_THE_THING(){
   IMPORT_CONTRACTS_2025_06
   IMPORT_ENROLLMENTS_2025_06
   MERGE_TABLES
-  CHECK_IF_TABLE_POPULATED
-
 }
 
 
