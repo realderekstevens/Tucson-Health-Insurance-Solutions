@@ -35,6 +35,7 @@ IMPORTER_MENU(){
     "Data Import Menu"
   OPTIONS=$(gum choose --header "Expiditied Testing Importer Menu: " \
     "Return to Main Menu" \
+    "Do the thing" \
     "Drop Database Medicare" \
     "Drop Table Master" \
     "Drop Table Contracts 06.15.2025" \
@@ -43,7 +44,6 @@ IMPORTER_MENU(){
     "Create Table Contracts 06.15.2025" \
     "Create Table Enrollments 06.15.2025" \
     "Download monthly-enrollment-cpsc-2025-06.zip" \
-    "Unzip monthly-enrollment-cpsc-2025-06.zip" \
     "Upload CPSC_Contract_Info_2025_06.csv" \
     "Upload CPSC_Enrollment_Info_2025_06.csv" \
     "Cross Merge into Master" \
@@ -51,6 +51,7 @@ IMPORTER_MENU(){
     "Delete CPSC_Enrollment_Info_2025_06.csv" \
     "Delete monthly-enrollment-cpsc-2025-06.zip")
     case "$OPTIONS" in
+     "Do the thing") DO_THE_THING ;;
      "Drop Database Medicare") DELETE_DATABASE ;;
      "Return to Main Menu") MAIN_MENU ;;
      "Drop Table Master") MAIN_MENU ;; 
@@ -60,10 +61,9 @@ IMPORTER_MENU(){
      "Create Table Contracts Schema 06.15.2025") MAIN_MENU ;;
      "Create Table Enrollments Schema 06.15.2025") MAIN_MENU ;;
      "Download monthly-enrollment-cpsc-2025-06.zip") MAIN_MENU ;;
-     "UNZIP monthly-enrollment-cpsc-2025-06.zip") MAIN_MENU ;;
      "UPLOAD CPSC_Contract_Info_2025_06") MAIN_MENU ;;
      "UPLOAD CPSC_Enrollment_Info_2025_06") MAIN_MENU ;;
-     "Cross Merge into Master") MAIN_MENU ;;
+     "Cross Merge into Master") CROSS_MERGE_06_2025 ;;
      "DELETE CPSC_Contract_Info_2025_06.csv") MAIN_MENU ;;
      "DELETE CPSC_Enrollment_Info_2025_06.csv") MAIN_MENU ;;
      "DELETE monthly-enrollment-cpsc-2025-06.zip") MAIN_MENU ;;
@@ -111,6 +111,134 @@ IMPORT_ENROLLMENTS_2025_06(){
 IMPORT_CONTRACTS_2025_06(){
   psql -d medicare -U postgres -c "\COPY contracts(contract_id, plan_id, ssa_state_county_code, fips_state_county_code, state, county, enrollment) from /home/dude/Github/MedicareAPI/csv/CPSC_Contract_Info_2025_06.csv delimiter ',' csv header;"
 }
+
+UNZIP_CPSC_ENROLLMENT_2025_06(){
+  set -e # Exit on any error
+  ZIP_FILE="/home/dude/github/MedicareAPI/zip/cpsc_enrollment_2025_06.zip"
+  CSV_DIR="/home/dude/github/MedicareAPI/csv/"
+  # Check if zip file exists
+  if [ ! -f "$ZIP_FILE" ]; then
+    echo "Error: Zip file $ZIP_FILE does not exist"
+    exit 1
+  fi
+
+  # Create target directory if it doesn't exist
+  mkdir - p "$CSV_DIR"
+
+  # Run unzip and capture output/errors
+  unzip -o "$ZIP_FILE" -d "$CSV_DIR" 2>&1 | tee unzip.log
+  if [ $? -ne 0 ]; then
+    echo "Error: Failed to unzip $ZIP_FILE to $CSV_DIR"
+    cat unzip.log
+    exit 1
+  fi
+
+echo "Successfully unzipped $ZIP_FILE to $CSV_DIR"
+}
+
+
+#!/bin/bash
+
+# Assuming $PSQL is defined, e.g., PSQL="psql -U user -d medicare -q -t"
+
+CREATE_TABLE_CONTRACTS() {
+    $PSQL "CREATE TABLE contracts();"
+    $PSQL "ALTER TABLE contracts ADD COLUMN postgres_id SERIAL PRIMARY KEY;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN contract_id VARCHAR;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN plan_id SMALLINT;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN organization_type VARCHAR;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN plan_type VARCHAR;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN offers_part_d BOOLEAN;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN snp_plan BOOLEAN;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN eghp BOOLEAN;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN organization_name VARCHAR;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN organization_marketing_name VARCHAR;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN plan_name VARCHAR;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN parent_organization VARCHAR;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN contract_effective_date DATE;"
+    echo "Created Tables contracts & Altered"
+}
+
+CREATE_TABLE_ENROLLMENTS() {
+    $PSQL "CREATE TABLE enrollments();"
+    $PSQL "ALTER TABLE enrollments ADD COLUMN postgres_id SERIAL PRIMARY KEY;"
+    $PSQL "ALTER TABLE enrollments ADD COLUMN contract_id VARCHAR(10);"
+    $PSQL "ALTER TABLE enrollments ADD COLUMN plan_id SMALLINT;"
+    $PSQL "ALTER TABLE enrollments ADD COLUMN ssa_state_county_code VARCHAR(10);"
+    $PSQL "ALTER TABLE enrollments ADD COLUMN fips_state_county_code VARCHAR(10);"
+    $PSQL "ALTER TABLE enrollments ADD COLUMN state VARCHAR(2);"
+    $PSQL "ALTER TABLE enrollments ADD COLUMN county VARCHAR(50);"
+    $PSQL "ALTER TABLE enrollments ADD COLUMN enrollment VARCHAR(100);"
+    echo "Created Table enrollments & Altered"
+}
+
+MERGE_TABLES() {
+    $PSQL "CREATE TABLE merged_contracts_enrollments (
+        primary_id VARCHAR(50),
+        contract_id VARCHAR(10),
+        plan_id SMALLINT,
+        organization_type VARCHAR,
+        plan_type VARCHAR,
+        offers_part_d BOOLEAN,
+        snp_plan BOOLEAN,
+        eghp BOOLEAN,
+        organization_name VARCHAR,
+        organization_marketing_name VARCHAR,
+        plan_name VARCHAR,
+        parent_organization VARCHAR,
+        contract_effective_date DATE,
+        ssa_state_county_code VARCHAR(10),
+        fips_state_county_code VARCHAR(10),
+        state VARCHAR(2),
+        county VARCHAR(50),
+        enrollment VARCHAR(100),
+        PRIMARY KEY (contract_id, plan_id, ssa_state_county_code)
+    );"
+    $PSQL "INSERT INTO merged_contracts_enrollments
+           SELECT 
+               CONCAT(c.contract_id, '_', c.plan_id) AS primary_id,
+               c.contract_id,
+               c.plan_id,
+               c.organization_type,
+               c.plan_type,
+               c.offers_part_d,
+               c.snp_plan,
+               c.eghp,
+               c.organization_name,
+               c.organization_marketing_name,
+               c.plan_name,
+               c.parent_organization,
+               c.contract_effective_date,
+               e.ssa_state_county_code,
+               e.fips_state_county_code,
+               e.state,
+               e.county,
+               e.enrollment
+           FROM 
+               contracts c
+           INNER JOIN 
+               enrollments e
+           ON 
+               c.contract_id = e.contract_id 
+               AND c.plan_id = e.plan_id;"
+    echo "Merged contracts and enrollments into merged_contracts_enrollments"
+}
+
+DO_THE_THING(){
+# Call the functions
+  CREATE_TABLE_CONTRACTS
+  CREATE_TABLE_ENROLLMENTS
+  MERGE_TABLES
+}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -341,7 +469,7 @@ CREATE_DATABASE(){
 	CREATE_DATABASE_AND_TABLES_MENU "Created Database: medicare"
 }
 
-CREATE_TABLE_CONTRACTS(){
+OLD_CREATE_TABLE_CONTRACTS(){
 	$PSQL "CREATE TABLE contracts();"
 	$PSQL "ALTER TABLE contracts ADD COLUMN postgres_id SERIAL PRIMARY KEY ;"
 	$PSQL "ALTER TABLE contracts ADD COLUMN contract_id VARCHAR;"
@@ -349,7 +477,7 @@ CREATE_TABLE_CONTRACTS(){
 	$PSQL "ALTER TABLE contracts ADD COLUMN organization_type VARCHAR;"
 	$PSQL "ALTER TABLE contracts ADD COLUMN plan_type VARCHAR;"
 	$PSQL "ALTER TABLE contracts ADD COLUMN offers_part_d BOOLEAN;"
-	$PSQL "ALTER TABLE contracts ADD column snp_plan BOOLEAN;"
+	$PSQL "ALTER TABLE contracts ADD COLUMN snp_plan BOOLEAN;"
 	$PSQL "ALTER TABLE contracts ADD COLUMN eghp BOOLEAN;"
 	$PSQL "ALTER TABLE contracts ADD COLUMN organization_name VARCHAR;"
 	$PSQL "ALTER TABLE contracts ADD COLUMN organization_marketing_name VARCHAR;"
@@ -359,7 +487,7 @@ CREATE_TABLE_CONTRACTS(){
 	CREATE_DATABASE_AND_TABLES_MENU "Created Tables contracts & Altered"
 }
 
-CREATE_TABLE_ENROLLMENTS(){
+OLD_CREATE_TABLE_ENROLLMENTS(){
 	$PSQL "CREATE TABLE enrollments();"
 	$PSQL "ALTER TABLE enrollments ADD COLUMN postgres_id SERIAL PRIMARY KEY;"
 	$PSQL "ALTER TABLE enrollments ADD COLUMN contract_id VARCHAR(10);"
@@ -395,6 +523,11 @@ esac
 DELETE_DATABASE(){
 	$PSQL_CreateDatabase "DROP DATABASE medicare;"
 	DELETE_DATABASE_MANAGEMENT_MENU "Dropped Table medicare"
+}
+
+DELETE_TABLE_MASTER(){
+  $PSQL "DROP TABLE master;"
+  DELETE_DATABASE_MANAGEMENT_MENU "Dropped Table master"
 }
 
 DELETE_TABLE_CONTRACTS(){
