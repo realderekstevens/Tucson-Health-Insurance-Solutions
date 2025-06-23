@@ -87,29 +87,16 @@ INSERT_DATA_MENU(){
 esac
 }
 
-INSERT_EXAMPLE_BIKES_DATA(){
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('Mountain', 27);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('Mountain', 28);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('Mountain', 29);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('Road', 27);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('Road', 28);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('Road', 29);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('BMX', 19);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('BMX', 20);"
-	$PSQL "INSERT INTO bikes (type, size) VALUES ('BMX', 21);"
-	DATABASE_MANAGEMENT_MENU "Inserted Example Bikes"
-}
-
 IMPORT_EXAMPLE(){
-	psql -d medicare -U postgres -c "\COPY enrollments(contract_id, plan_id, ssa_state_county_code, fips_state_county_code, state, county, enrollment) from /home/dude/MedicareAPI/csv/CPSC_Enrollment_Info_2024_07.csv delimiter ',' csv header;"
+	psql -d medicare -U postgres -c "\COPY enrollments(contract_id, plan_id, ssa_state_county_code, fips_state_county_code, state, county, enrollment) from /home/dude/CPSC_Enrollment_Info_2024_07.csv delimiter ',' csv header;"
 }
 
 IMPORT_ENROLLMENTS_2025_06(){
-  psql -d medicare -U postgres -c "\COPY enrollments(contract_id, plan_id, ssa_state_county_code, fips_state_county_code, state, county, enrollment) from /home/dude/Github/MedicareAPI/csv/CPSC_Enrollment_Info_2025_06.csv delimiter ',' csv header;"
+  psql -d medicare -U postgres -c "\COPY enrollments(contract_id, plan_id, ssa_state_county_code, fips_state_county_code, state, county, enrollment) from /home/dude/CPSC_Enrollment_Info_2025_06.csv delimiter ',' csv header;"
 }
 
 IMPORT_CONTRACTS_2025_06(){
-  psql -d medicare -U postgres -c "\COPY contracts(contract_id, plan_id, ssa_state_county_code, fips_state_county_code, state, county, enrollment) from /home/dude/Github/MedicareAPI/csv/CPSC_Contract_Info_2025_06.csv delimiter ',' csv header;"
+  psql -d medicare -U postgres -c "\COPY contracts(contract_id, plan_id, ssa_state_county_code, fips_state_county_code, state, county, enrollment) from /home/dude/CPSC_Contract_Info_2025_06.csv delimiter ',' csv header;"
 }
 
 UNZIP_CPSC_ENROLLMENT_2025_06(){
@@ -136,15 +123,10 @@ UNZIP_CPSC_ENROLLMENT_2025_06(){
 echo "Successfully unzipped $ZIP_FILE to $CSV_DIR"
 }
 
-
-#!/bin/bash
-
-# Assuming $PSQL is defined, e.g., PSQL="psql -U user -d medicare -q -t"
-
 CREATE_TABLE_CONTRACTS() {
     $PSQL "CREATE TABLE contracts();"
     $PSQL "ALTER TABLE contracts ADD COLUMN postgres_id SERIAL PRIMARY KEY;"
-    $PSQL "ALTER TABLE contracts ADD COLUMN contract_id VARCHAR;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN contract_id VARCHAR(10);"
     $PSQL "ALTER TABLE contracts ADD COLUMN plan_id SMALLINT;"
     $PSQL "ALTER TABLE contracts ADD COLUMN organization_type VARCHAR;"
     $PSQL "ALTER TABLE contracts ADD COLUMN plan_type VARCHAR;"
@@ -170,6 +152,13 @@ CREATE_TABLE_ENROLLMENTS() {
     $PSQL "ALTER TABLE enrollments ADD COLUMN county VARCHAR(50);"
     $PSQL "ALTER TABLE enrollments ADD COLUMN enrollment VARCHAR(100);"
     echo "Created Table enrollments & Altered"
+}
+
+CHECK_IF_TABLE_POPULATED() {
+  if [ $($PSQL "SELECT COUNT(*) FROM CONTRACTS;") -eq 0]; then
+    echo "Error: contracts table is empty"
+    exit 1
+  fi
 }
 
 MERGE_TABLES() {
@@ -225,10 +214,15 @@ MERGE_TABLES() {
 }
 
 DO_THE_THING(){
-# Call the functions
+  DELETE_DATABASE
+  CREATE_DATABASE
   CREATE_TABLE_CONTRACTS
   CREATE_TABLE_ENROLLMENTS
+  IMPORT_CONTRACTS_2025_06
+  IMPORT_ENROLLMENTS_2025_06
   MERGE_TABLES
+  CHECK_IF_TABLE_POPULATED
+
 }
 
 
@@ -466,7 +460,6 @@ esac
 
 CREATE_DATABASE(){
 	$PSQL_CreateDatabase "CREATE DATABASE medicare;"
-	CREATE_DATABASE_AND_TABLES_MENU "Created Database: medicare"
 }
 
 OLD_CREATE_TABLE_CONTRACTS(){
@@ -522,7 +515,6 @@ esac
 
 DELETE_DATABASE(){
 	$PSQL_CreateDatabase "DROP DATABASE medicare;"
-	DELETE_DATABASE_MANAGEMENT_MENU "Dropped Table medicare"
 }
 
 DELETE_TABLE_MASTER(){
