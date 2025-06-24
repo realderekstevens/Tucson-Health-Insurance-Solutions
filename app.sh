@@ -11,9 +11,10 @@ MAIN_MENU(){
     --padding "1 2" \
     --border-foreground "#04B575" \
     "Welcome to" "     HealthcareCLI"
-  OPTIONS=$(gum choose --header "Main Menu: " "Importer" "Query" "Database" "Git" "PostgREST" "Arch Linux" "Exit")
+  OPTIONS=$(gum choose --header "Main Menu: " "Importer" "Inserter" "Query" "Database" "Git" "PostgREST" "Arch Linux" "Exit")
     case "$OPTIONS" in
      "Importer") IMPORTER_MENU ;;
+     "Inserter") INSERT_DATA_MENU ;;
      "Query") MAIN_MENU ;;
      "Database") DATABASE_MANAGEMENT_MENU ;;
      "Git") GITHUB_MANAGEMENT_MENU ;;
@@ -71,24 +72,19 @@ IMPORTER_MENU(){
 }
 
 INSERT_DATA_MENU(){
-   if [[ $1 ]]
-   then
-      echo -e "\n$1"
-   fi
-   echo -e "\n~~~~~ Insert Data Menu ~~~~~"
-   echo -e "\n0. Return To Database Management Menu\n1. Insert 07/2024 Data\n"
-   echo "Enter Command: "
-   read DATABASE_MANAGEMENT_MENU_SELECTION
-   case $DATABASE_MANAGEMENT_MENU_SELECTION in
-   0) DATABASE_MANAGEMENT_MENU ;;
-   1) INSERT_EXAMPLE_BIKES_DATA ;;
-   2) IMPORT_EXAMPLE ;;
-   *) INSERT_DATA_MENU "Please enter a valid option." ;;
-esac
-}
-
-IMPORT_EXAMPLE(){
-	psql -d medicare -U postgres -c "\COPY enrollments(contract_id, plan_id, ssa_state_county_code, fips_state_county_code, state, county, enrollment) from /home/dude/CPSC_Enrollment_Info_2024_07.csv delimiter ',' csv header;"
+  clear
+  gum style \
+    --border thick \
+    --margin ".5" \
+    --padding "1 2" \
+    --border-foreground "#04B575" \
+    "Welcome to" "     HealthcareCLI"
+  OPTIONS=$(gum choose --header "Main Menu: " "Importer" "Query" "Database" "Git" "PostgREST" "Arch Linux" "Exit")
+    case "$OPTIONS" in
+     "Import Enrollments 06 2025") IMPORT_ENROLLMENTS_2025_06 ;;
+     "Import Contracts 06 2025") IMPORT_CONTRACTS_2025_06 ;;
+     "Return to Main Menu") MAIN_MENU ;;
+    esac
 }
 
 IMPORT_ENROLLMENTS_2025_06(){
