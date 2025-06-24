@@ -123,41 +123,9 @@ UNZIP_CPSC_ENROLLMENT_2025_06(){
 echo "Successfully unzipped $ZIP_FILE to $CSV_DIR"
 }
 
-CREATE_TABLE_CONTRACTS() {
-    $PSQL "CREATE TABLE contracts();"
-    $PSQL "ALTER TABLE contracts ADD COLUMN postgres_id SERIAL PRIMARY KEY;"
-    $PSQL "ALTER TABLE contracts ADD COLUMN contract_id VARCHAR(10);"
-    $PSQL "ALTER TABLE contracts ADD COLUMN plan_id VARCHAR(10);"
-    $PSQL "ALTER TABLE contracts ADD COLUMN organization_type VARCHAR;"
-    $PSQL "ALTER TABLE contracts ADD COLUMN plan_type VARCHAR;"
-    $PSQL "ALTER TABLE contracts ADD COLUMN offers_part_d BOOLEAN;"
-    $PSQL "ALTER TABLE contracts ADD COLUMN snp_plan BOOLEAN;"
-    $PSQL "ALTER TABLE contracts ADD COLUMN eghp BOOLEAN;"
-    $PSQL "ALTER TABLE contracts ADD COLUMN organization_name VARCHAR;"
-    $PSQL "ALTER TABLE contracts ADD COLUMN organization_marketing_name VARCHAR;"
-    $PSQL "ALTER TABLE contracts ADD COLUMN plan_name VARCHAR;"
-    $PSQL "ALTER TABLE contracts ADD COLUMN parent_organization VARCHAR;"
-    $PSQL "ALTER TABLE contracts ADD COLUMN contract_effective_date VARCHAR;"
-    echo "Created Tables contracts & Altered"
-}
-
-CREATE_TABLE_ENROLLMENTS() {
-    $PSQL "CREATE TABLE enrollments();"
-    $PSQL "ALTER TABLE enrollments ADD COLUMN postgres_id SERIAL PRIMARY KEY;"
-    $PSQL "ALTER TABLE enrollments ADD COLUMN contract_id VARCHAR(10);"
-    $PSQL "ALTER TABLE enrollments ADD COLUMN plan_id VARCHAR(10);"
-    $PSQL "ALTER TABLE enrollments ADD COLUMN ssa_state_county_code VARCHAR(10);"
-    $PSQL "ALTER TABLE enrollments ADD COLUMN fips_state_county_code VARCHAR(10);"
-    $PSQL "ALTER TABLE enrollments ADD COLUMN state VARCHAR(2);"
-    $PSQL "ALTER TABLE enrollments ADD COLUMN county VARCHAR(50);"
-    $PSQL "ALTER TABLE enrollments ADD COLUMN enrollment VARCHAR(100);"
-    echo "Created Table enrollments & Altered"
-}
-
-
 MERGE_TABLES() {
     $PSQL "CREATE TABLE merged_contracts_enrollments (
-        primary_id VARCHAR(50),
+        postgres_id SERIAL PRIMARY KEY(10),
         contract_id VARCHAR(10),
         plan_id VARCHAR(10),
         organization_type VARCHAR,
@@ -175,7 +143,7 @@ MERGE_TABLES() {
         state VARCHAR(2),
         county VARCHAR(50),
         enrollment VARCHAR(100),
-        PRIMARY KEY (contract_id, plan_id, ssa_state_county_code)
+        PRIMARY KEY (contract_id, plan_id)
     );"
     $PSQL "INSERT INTO merged_contracts_enrollments
            SELECT 
@@ -212,6 +180,7 @@ DO_THE_THING(){
   CREATE_DATABASE
   CREATE_TABLE_CONTRACTS
   CREATE_TABLE_ENROLLMENTS
+  CREATE_TABLE_MASTER
   IMPORT_CONTRACTS_2025_06
   IMPORT_ENROLLMENTS_2025_06
   MERGE_TABLES
@@ -430,7 +399,7 @@ LIST_TABLE_ENROLLMENTS(){
 	LIST_SCHEMA_MENU "Listed Table enrollments"
 }
 
-##### ##### ##### ##### #####
+##### ##### CREATE ##### #####
 
 CREATE_DATABASE_AND_TABLES_MENU(){
    if [[ $1 ]]
@@ -448,6 +417,60 @@ CREATE_DATABASE_AND_TABLES_MENU(){
    3) CREATE_TABLE_ENROLLMENTS ;;
    *) CREATE_DATABASE_AND_TABLES_MENU "Please enter a valid option." ;;
 esac
+}
+
+CREATE_TABLE_CONTRACTS() {
+    $PSQL "CREATE TABLE contracts();"
+    $PSQL "ALTER TABLE contracts ADD COLUMN postgres_id SERIAL PRIMARY KEY;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN contract_id VARCHAR(10);"
+    $PSQL "ALTER TABLE contracts ADD COLUMN plan_id VARCHAR(10);"
+    $PSQL "ALTER TABLE contracts ADD COLUMN organization_type VARCHAR;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN plan_type VARCHAR;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN offers_part_d BOOLEAN;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN snp_plan BOOLEAN;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN eghp BOOLEAN;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN organization_name VARCHAR;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN organization_marketing_name VARCHAR;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN plan_name VARCHAR;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN parent_organization VARCHAR;"
+    $PSQL "ALTER TABLE contracts ADD COLUMN contract_effective_date VARCHAR;"
+    echo "Created Tables contracts & Altered!!!"
+}
+
+CREATE_TABLE_ENROLLMENTS() {
+    $PSQL "CREATE TABLE enrollments();"
+    $PSQL "ALTER TABLE enrollments ADD COLUMN postgres_id SERIAL PRIMARY KEY;"
+    $PSQL "ALTER TABLE enrollments ADD COLUMN contract_id VARCHAR(10);"
+    $PSQL "ALTER TABLE enrollments ADD COLUMN plan_id VARCHAR(10);"
+    $PSQL "ALTER TABLE enrollments ADD COLUMN ssa_state_county_code VARCHAR(10);"
+    $PSQL "ALTER TABLE enrollments ADD COLUMN fips_state_county_code VARCHAR(10);"
+    $PSQL "ALTER TABLE enrollments ADD COLUMN state VARCHAR(2);"
+    $PSQL "ALTER TABLE enrollments ADD COLUMN county VARCHAR(50);"
+    $PSQL "ALTER TABLE enrollments ADD COLUMN enrollment VARCHAR(100);"
+    echo "Created Table enrollments!!!"
+}
+
+CREATE_TABLE_MASTER() {
+    $PSQL "CREATE TABLE master();"
+    $PSQL "ALTER TABLE master ADD COLUMN postgres_id SERIAL PRIMARY KEY;"
+    $PSQL "ALTER TABLE master ADD COLUMN contract_id VARCHAR(10);"
+    $PSQL "ALTER TABLE master ADD COLUMN plan_id VARCHAR(10);"
+    $PSQL "ALTER TABLE master ADD COLUMN ssa_state_county_code VARCHAR(10);"
+    $PSQL "ALTER TABLE master ADD COLUMN fips_state_county_code VARCHAR(10);"
+    $PSQL "ALTER TABLE master ADD COLUMN state VARCHAR(2);"
+    $PSQL "ALTER TABLE master ADD COLUMN county VARCHAR(50);"
+    $PSQL "ALTER TABLE master ADD COLUMN enrollment VARCHAR(100);"
+    $PSQL "ALTER TABLE master ADD COLUMN organization_type VARCHAR;"
+    $PSQL "ALTER TABLE master ADD COLUMN plan_type VARCHAR;"
+    $PSQL "ALTER TABLE master ADD COLUMN offers_part_d BOOLEAN;"
+    $PSQL "ALTER TABLE master ADD COLUMN snp_plan BOOLEAN;"
+    $PSQL "ALTER TABLE master ADD COLUMN eghp BOOLEAN;"
+    $PSQL "ALTER TABLE master ADD COLUMN organization_name VARCHAR;"
+    $PSQL "ALTER TABLE master ADD COLUMN organization_marketing_name VARCHAR;"
+    $PSQL "ALTER TABLE master ADD COLUMN plan_name VARCHAR;"
+    $PSQL "ALTER TABLE master ADD COLUMN parent_organization VARCHAR;"
+    $PSQL "ALTER TABLE master ADD COLUMN contract_effective_date VARCHAR;"
+    echo "Created Table master!!!"
 }
 
 CREATE_DATABASE(){
