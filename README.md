@@ -20,6 +20,22 @@ yay -S realderekstevens/HealthcareAPI
 	*Copy/Paste below files to /home/healthcareapi/ directory
 chown healthcareapi /home/healthcareapi/
 
+# Debian 12 FastAPI Quickmount Instructions:
+sudo apt-get install ufw git
+ufw disable
+	*** Confirm firewall down; Test with command: ufw status ***
+audo upgrade -y
+sudo apt-get upgrade -y
+sudo apt install -y python3 python3 python3-venv
+mkdir -p ~/fastapi-test
+cd ~/fastapi-test
+python -m venv venv
+source venv/bin/activate
+pip install fastapi uvicorn
+	*** place simplified main.py via nvim ~/fastapi-test/main.py ***
+uvicorn main:app --host 0.0.0.0 --port 80
+ 
+
 # Initalize the postgres database
 yay -Syu postgrest-bin postgresql ufw gum
 su postgres
