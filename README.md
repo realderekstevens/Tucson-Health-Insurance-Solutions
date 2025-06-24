@@ -1,35 +1,36 @@
-# arch_pg_render
-Render engine extension for bare metal PostgreSQL 15 on Arch Linux.
-
 # MedicareAPI
 The open-source database dedicated to cataloging Medicare data. Right now it is being developed with PostgREST API to complement the PostgreSQL 15 on an Arch Linux.
 
-# 0.) Install YaY
-```bash
-pacman -Syu git
-sudo useradd -m -G wheel user
-sudo EDITOR=vim visudo
-(Find the and uncomment wheel group without password line 108
-passwd user
-confirm password
-su - user
+# Move everything in this folder to /home/healthcareapi/
+sudo pacman -Syu git neovim
+sudo useradd -m -G wheel healthcareapi
+sudo EDITOR=nvim visudo
+    *uncomment wheel group, around line 108*
+passwd healthcareapi
+    *confirm password*
+
+# Install yay
+su - healthcareapi
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
-```
 
-# 1.) Initalize the postgres database
-```bash
-yay -Syu postgrest-bin postgresql
+# Install this
+yay -S realderekstevens/HealthcareAPI
+	*Copy/Paste below files to /home/healthcareapi/ directory
+chown healthcareapi /home/healthcareapi/
+
+# Initalize the postgres database
+yay -Syu postgrest-bin postgresql ufw gum
 su postgres
 initdb --locale=C.UTF-8 --encoding=UTF8 -D /var/lib/postgres/data --data-checksums
 exit
 systemctl start postgresql
 systemctl enable postgresql
 vim /var/lib/postgres/.psql_history
-wq
+	:wq
 chown postgres /var/lib/postgres/.psql_history
-```
+timedatectl set-timezone America/Phoenix
 
 # 2.) Copy the MakeFile, arch_pg_render--1.0, arch_pg_render.control
 ```bash
