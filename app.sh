@@ -1,615 +1,703 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-PSQL="psql -X --username=postgres --dbname=medicare --tuples-only -c"
-PSQL_CreateDatabase="psql -X --username=postgres --dbname=postgres --tuples-only -c"
+set -e # Exit on any error
 
-MAIN_MENU(){
-  clear
-  gum style \
-    --border thick \
-    --margin ".5" \
-    --padding "1 2" \
-    --border-foreground "#04B575" \
-    "Welcome to" "     HealthcareCLI"
-  OPTIONS=$(gum choose --header "Main Menu: " "Importer" "Inserter" "Query" "Database" "Git" "PostgREST" "Arch Linux" "Exit")
-    case "$OPTIONS" in
-     "Importer") IMPORTER_MENU ;;
-     "Inserter") INSERT_DATA_MENU ;;
-     "Query") MAIN_MENU ;;
-     "Database") DATABASE_MANAGEMENT_MENU ;;
-     "Git") GITHUB_MANAGEMENT_MENU ;;
-     "PostgREST") POSTGREST_MANAGEMENT_MENU ;;
-     "Arch Linux") ARCH_LINUX_MANAGEMENT_MENU ;;
-     "Exit") EXIT ;;
-    esac
+# Configuration
+DB_NAME="medicare"
+DB_USER="postgres"
+PSQL="psql -X --username=$DB_USER --dbname=$DB_NAME --tuples-only -c"
+PSQL_DEFAULT="psql -X --username=$DB_USER --dbname=postgres --tuples-only -c"
+BASE_DIR="/home/dude/github/MedicareAPI"
+ZIP_DIR="${BASE_DIR}/zip"
+CSV_DIR="${BASE_DIR}/csv"
+ZIP_FILE="monthly-enrollment-cpsc-2025-06.zip"
+CONTRACT_CSV="CPSC_Contract_Info_2025_06.csv"
+ENROLLMENT_CSV="CPSC_Enrollment_Info_2025_06.csv"
+GUM_STYLE=(
+  --border thick
+  --margin "0.5"
+  --padding "1 2"
+  --border-foreground "#04B575"
+)
+
+# Reusable styled header function
+render_header() {
+  gum style "${GUM_STYLE[@]}" "$@"
 }
 
-##### ##### IMPORTER ##### #####
-
-IMPORTER_MENU(){
-  clear
-  gum style \
-    --border thick \
-    --margin ".5" \
-    --padding "1 2" \
-    --border-foreground "#04B575" \
-    "Data Import Menu"
-  OPTIONS=$(gum choose --header "Expiditied Testing Importer Menu: " \
-    "Return to Main Menu" \
-    "Do the thing" \
-    "Drop Database Medicare" \
-    "Drop Table Master" \
-    "Drop Table Contracts 06.15.2025" \
-    "Drop Table Enrollments 06.15.2025" \
-    "Create Table Master" \
-    "Create Table Contracts 06.15.2025" \
-    "Create Table Enrollments 06.15.2025" \
-    "Download monthly-enrollment-cpsc-2025-06.zip" \
-    "Upload CPSC_Contract_Info_2025_06.csv" \
-    "Upload CPSC_Enrollment_Info_2025_06.csv" \
-    "Cross Merge into Master" \
-    "Delete CPSC_Contract_Info_2025_06.csv" \
-    "Delete CPSC_Enrollment_Info_2025_06.csv" \
-    "Delete monthly-enrollment-cpsc-2025-06.zip")
-    case "$OPTIONS" in
-     "Do the thing") DO_THE_THING ;;
-     "Drop Database Medicare") DELETE_DATABASE ;;
-     "Return to Main Menu") MAIN_MENU ;;
-     "Drop Table Master") MAIN_MENU ;; 
-     "Drop Table Contracts 06.15.2025") DELETE_TABLE_CONTRACTS ;;
-     "Drop Table Enrollments 06.15.2025") DELETE_TABLE_ENROLLMENTS ;;
-     "Create Table Master") MAIN_MENU ;;
-     "Create Table Contracts Schema 06.15.2025") MAIN_MENU ;;
-     "Create Table Enrollments Schema 06.15.2025") MAIN_MENU ;;
-     "Download monthly-enrollment-cpsc-2025-06.zip") MAIN_MENU ;;
-     "UPLOAD CPSC_Contract_Info_2025_06") MAIN_MENU ;;
-     "UPLOAD CPSC_Enrollment_Info_2025_06") MAIN_MENU ;;
-     "Cross Merge into Master") CROSS_MERGE_06_2025 ;;
-     "DELETE CPSC_Contract_Info_2025_06.csv") MAIN_MENU ;;
-     "DELETE CPSC_Enrollment_Info_2025_06.csv") MAIN_MENU ;;
-     "DELETE monthly-enrollment-cpsc-2025-06.zip") MAIN_MENU ;;
-    esac
+# Main Menu
+main_menu() {
+  render_header "Welcome to" "HealthcareCLI"
+  local options=("Dev Tools" "Importer" "Inserter" "Query" "Database" "Git" "PostgREST" "Arch Linux" "Exit")
+  local choice
+  choice=$(gum choose --header "Main Menu:" "${options[@]}")
+  case "$choice" in
+    "Dev Tools") dev_tools_menu ;;
+    "Importer") importer_menu ;;
+    "Inserter") insert_data_menu ;;
+    "Query") query_menu ;;
+    "Database") database_management_menu ;;
+    "Git") github_management_menu ;;
+    "PostgREST") postgrest_management_menu ;;
+    "Arch Linux") arch_linux_management_menu ;;
+    "Exit") exit_program ;;
+    *) main_menu ;;
+  esac
 }
 
-INSERT_DATA_MENU(){
-  clear
-  gum style \
-    --border thick \
-    --margin ".5" \
-    --padding "1 2" \
-    --border-foreground "#04B575" \
-    "Welcome to" "     HealthcareCLI"
-  OPTIONS=$(gum choose --header "Main Menu: " "Importer" "Query" "Database" "Git" "PostgREST" "Arch Linux" "Exit")
-    case "$OPTIONS" in
-     "Import Enrollments 06 2025") IMPORT_ENROLLMENTS_2025_06 ;;
-     "Import Contracts 06 2025") IMPORT_CONTRACTS_2025_06 ;;
-     "Return to Main Menu") MAIN_MENU ;;
-    esac
+# Dev Tools Menu
+dev_tools_menu() {
+  render_header "Dev Tools Menu"
+  local options=(
+    "Return to Main Menu"
+    "Full Process 06.2025"
+    "Drop Database $DB_NAME"
+    "Create Table Master"
+    "Create Table Contracts"
+    "Create Table Enrollments"
+    "Upload $CONTRACT_CSV"
+    "Upload $ENROLLMENT_CSV"
+    "Cross Merge into Master"
+  )
+  local choice
+  choice=$(gum choose --header "Importer Menu:" "${options[@]}")
+  case "$choice" in
+    "Return to Main Menu") main_menu ;;
+    "Full Process 06.2025") do_the_thing ;;
+    "Drop Database $DB_NAME") delete_database ;;
+    "Create Table Master") create_table_master ;;
+    "Create Table Contracts") create_table_contracts ;;
+    "Create Table Enrollments") create_table_enrollments ;;
+    "Upload $CONTRACT_CSV") import_contracts ;;
+    "Upload $ENROLLMENT_CSV") import_enrollments ;;
+    "Cross Merge into Master") merge_tables ;;
+    *) dev_tools_menu ;;
+  esac
 }
 
-IMPORT_ENROLLMENTS_2025_06(){
-  psql -d medicare -U postgres -c "\COPY enrollments(contract_id, plan_id, ssa_state_county_code, fips_state_county_code, state, county, enrollment) from /home/dude/CPSC_Enrollment_Info_2025_06.csv delimiter ',' csv header;"
+# Importer Menu
+importer_menu() {
+  render_header "Data Import Menu"
+  local options=(
+    "Return to Main Menu"
+    "Run Full Import Process"
+    "Drop Database $DB_NAME"
+    "Drop Table Master"
+    "Drop Table Contracts"
+    "Drop Table Enrollments"
+    "Create Table Master"
+    "Create Table Contracts"
+    "Create Table Enrollments"
+    "Download $ZIP_FILE"
+    "Upload $CONTRACT_CSV"
+    "Upload $ENROLLMENT_CSV"
+    "Cross Merge into Master"
+    "Delete $CONTRACT_CSV"
+    "Delete $ENROLLMENT_CSV"
+    "Delete $ZIP_FILE"
+  )
+  local choice
+  choice=$(gum choose --header "Importer Menu:" "${options[@]}")
+  case "$choice" in
+    "Return to Main Menu") main_menu ;;
+    "Fast Full System Check") do_the_thing ;;
+    "Drop Database $DB_NAME") delete_database ;;
+    "Drop Table Master") delete_table_master ;;
+    "Drop Table Contracts") delete_table_contracts ;;
+    "Drop Table Enrollments") delete_table_enrollments ;;
+    "Create Table Master") create_table_master ;;
+    "Create Table Contracts") create_table_contracts ;;
+    "Create Table Enrollments") create_table_enrollments ;;
+    "Download $ZIP_FILE") download_zip ;;
+    "Upload $CONTRACT_CSV") import_contracts ;;
+    "Upload $ENROLLMENT_CSV") import_enrollments ;;
+    "Cross Merge into Master") merge_tables ;;
+    "Delete $CONTRACT_CSV") delete_csv "$CONTRACT_CSV" ;;
+    "Delete $ENROLLMENT_CSV") delete_csv "$ENROLLMENT_CSV" ;;
+    "Delete $ZIP_FILE") delete_zip ;;
+    *) importer_menu ;;
+  esac
 }
 
-IMPORT_CONTRACTS_2025_06(){
-  psql -d medicare -U postgres -c "\COPY contracts(contract_id, plan_id, organization_type, plan_type, offers_part_d, snp_plan, eghp, organization_name, organization_marketing_name, plan_name, parent_organization, contract_effective_date) from /home/dude/CPSC_Contract_Info_2025_06.csv delimiter ',' csv header;"
+# Database Management Menu
+database_management_menu() {
+  render_header "Database Management Menu"
+  local options=("Return to Main Menu" "List Schemas" "Create" "Delete" "Insert" "Select" "Update")
+  local choice
+  choice=$(gum choose --header "Database Management Menu:" "${options[@]}")
+  case "$choice" in
+    "Return to Main Menu") main_menu ;;
+    "List Schemas") list_schema_menu ;;
+    "Create") create_database_and_tables_menu ;;
+    "Delete") delete_database_management_menu ;;
+    "Insert") insert_data_menu ;;
+    "Select") select_data_menu ;;
+    "Update") update_data_menu ;;
+    *) database_management_menu ;;
+  esac
 }
 
-UNZIP_CPSC_ENROLLMENT_2025_06(){
-  set -e # Exit on any error
-  ZIP_FILE="/home/dude/github/MedicareAPI/zip/cpsc_enrollment_2025_06.zip"
-  CSV_DIR="/home/dude/github/MedicareAPI/csv/"
-  # Check if zip file exists
-  if [ ! -f "$ZIP_FILE" ]; then
-    echo "Error: Zip file $ZIP_FILE does not exist"
-    exit 1
+# Git Management Menu
+github_management_menu() {
+  render_header "Git Management Menu"
+  local options=("Return to Main Menu" "Add app.sh" "Commit" "Push")
+  local choice
+  choice=$(gum choose --header "Git Management Menu:" "${options[@]}")
+  case "$choice" in
+    "Return to Main Menu") main_menu ;;
+    "Add app.sh") github_add ;;
+    "Commit") github_commit ;;
+    "Push") github_push ;;
+    *) github_management_menu ;;
+  esac
+}
+
+# PostgREST Management Menu
+postgrest_management_menu() {
+  render_header "PostgREST Management Menu"
+  local options=(
+    "Return to Main Menu"
+    "Create Schema 'api'"
+    "Create Table 'api.todos'"
+    "Create Role 'web_anon'"
+    "Create Role 'authenticator'"
+    "Create 'tutorial.conf'"
+    "Run PostgREST Tutorial"
+    "Create Role 'todo_user'"
+  )
+  local choice
+  choice=$(gum choose --header "PostgREST Management Menu:" "${options[@]}")
+  case "$choice" in
+    "Return to Main Menu") main_menu ;;
+    "Create Schema 'api'") postgrest_create_schema_api ;;
+    "Create Table 'api.todos'") postgrest_create_table_api_todos ;;
+    "Create Role 'web_anon'") postgrest_create_role_web_anon ;;
+    "Create Role 'authenticator'") postgrest_create_role_authenticator ;;
+    "Create 'tutorial.conf'") postgrest_create_tutorial_conf ;;
+    "Run PostgREST Tutorial") postgrest_start_tutorial_server ;;
+    "Create Role 'todo_user'") postgrest_create_role_todo_user ;;
+    *) postgrest_management_menu ;;
+  esac
+}
+
+# Arch Linux Management Menu
+arch_linux_management_menu() {
+  render_header "Arch Linux Management Menu"
+  local options=("Return to Main Menu" "System-Wide Update")
+  local choice
+  choice=$(gum choose --header "Arch Linux Management Menu:" "${options[@]}")
+  case "$choice" in
+    "Return to Main Menu") main_menu ;;
+    "System-Wide Update") arch_system_update ;;
+    *) arch_linux_management_menu ;;
+  esac
+}
+
+# Schema Management Menu
+list_schema_menu() {
+  render_header "Schema Management Menu"
+  local options=(
+    "Return to Database Management Menu"
+    "List Databases"
+    "List Tables"
+    "List Table contracts"
+    "List Table enrollments"
+  )
+  local choice
+  choice=$(gum choose --header "Schema Management Menu:" "${options[@]}")
+  case "$choice" in
+    "Return to Database Management Menu") database_management_menu ;;
+    "List Databases") list_databases ;;
+    "List Tables") list_tables ;;
+    "List Table contracts") list_table_contracts ;;
+    "List Table enrollments") list_table_enrollments ;;
+    *) list_schema_menu ;;
+  esac
+}
+
+# Create Database and Tables Menu
+create_database_and_tables_menu() {
+  render_header "Create Database & Tables Menu"
+  local options=(
+    "Return to Database Management Menu"
+    "Create Database $DB_NAME"
+    "Create Table contracts"
+    "Create Table enrollments"
+    "Create Table master"
+  )
+  local choice
+  choice=$(gum choose --header "Create Database & Tables Menu:" "${options[@]}")
+  case "$choice" in
+    "Return to Database Management Menu") database_management_menu ;;
+    "Create Database $DB_NAME") create_database ;;
+    "Create Table contracts") create_table_contracts ;;
+    "Create Table enrollments") create_table_enrollments ;;
+    "Create Table master") create_table_master ;;
+    *) create_database_and_tables_menu ;;
+  esac
+}
+
+# Delete Database and Tables Menu
+delete_database_management_menu() {
+  render_header "Delete Database & Tables Menu"
+  local options=(
+    "Return to Database Management Menu"
+    "Delete Database $DB_NAME"
+    "Delete Table contracts"
+    "Delete Table enrollments"
+    "Delete Table master"
+  )
+  local choice
+  choice=$(gum choose --header "Delete Database & Tables Menu:" "${options[@]}")
+  case "$choice" in
+    "Return to Database Management Menu") database_management_menu ;;
+    "Delete Database $DB_NAME") delete_database ;;
+    "Delete Table contracts") delete_table_contracts ;;
+    "Delete Table enrollments") delete_table_enrollments ;;
+    "Delete Table master") delete_table_master ;;
+    *) delete_database_management_menu ;;
+  esac
+}
+
+# Select Data Menu (Placeholder for future expansion)
+select_data_menu() {
+  render_header "Select Data Menu"
+  local options=("Return to Database Management Menu" "Select All from contracts" "Select All from enrollments")
+  local choice
+  choice=$(gum choose --header "Select Data Menu:" "${options[@]}")
+  case "$choice" in
+    "Return to Database Management Menu") database_management_menu ;;
+    "Select All from contracts") select_all_contracts ;;
+    "Select All from enrollments") select_all_enrollments ;;
+    *) select_data_menu ;;
+  esac
+}
+
+# Update Data Menu (Placeholder for future expansion)
+update_data_menu() {
+  render_header "Update Data Menu"
+  local options=("Return to Database Management Menu" "Update contracts" "Update enrollments")
+  local choice
+  choice=$(gum choose --header "Update Data Menu:" "${options[@]}")
+  case "$choice" in
+    "Return to Database Management Menu") database_management_menu ;;
+    "Update contracts") update_contracts ;;
+    "Update enrollments") update_enrollments ;;
+    *) update_data_menu ;;
+  esac
+}
+
+# Database Operations
+create_database() {
+  if $PSQL_DEFAULT "CREATE DATABASE $DB_NAME;"; then
+    render_header "Created Database $DB_NAME"
+  else
+    render_header "Error: Failed to create database $DB_NAME"
   fi
+  create_database_and_tables_menu
+}
 
-  # Create target directory if it doesn't exist
-  mkdir - p "$CSV_DIR"
-
-  # Run unzip and capture output/errors
-  unzip -o "$ZIP_FILE" -d "$CSV_DIR" 2>&1 | tee unzip.log
-  if [ $? -ne 0 ]; then
-    echo "Error: Failed to unzip $ZIP_FILE to $CSV_DIR"
-    cat unzip.log
-    exit 1
+create_table_contracts() {
+  local query="CREATE TABLE contracts (
+    postgres_id SERIAL PRIMARY KEY,
+    contract_id VARCHAR(10),
+    plan_id VARCHAR(10),
+    organization_type VARCHAR,
+    plan_type VARCHAR,
+    offers_part_d BOOLEAN,
+    snp_plan BOOLEAN,
+    eghp BOOLEAN,
+    organization_name VARCHAR,
+    organization_marketing_name VARCHAR,
+    plan_name VARCHAR,
+    parent_organization VARCHAR,
+    contract_effective_date VARCHAR
+  );"
+  if $PSQL "$query"; then
+    render_header "Created Table contracts"
+  else
+    render_header "Error: Failed to create table contracts"
   fi
-
-echo "Successfully unzipped $ZIP_FILE to $CSV_DIR"
+  create_database_and_tables_menu
 }
 
-MERGE_TABLES() {
-    $PSQL "CREATE TABLE merged_contracts_enrollments (
-        postgres_id SERIAL PRIMARY KEY(10),
-        contract_id VARCHAR(10),
-        plan_id VARCHAR(10),
-        organization_type VARCHAR,
-        plan_type VARCHAR,
-        offers_part_d BOOLEAN,
-        snp_plan BOOLEAN,
-        eghp BOOLEAN,
-        organization_name VARCHAR,
-        organization_marketing_name VARCHAR,
-        plan_name VARCHAR,
-        parent_organization VARCHAR,
-        contract_effective_date VARCHAR,
-        ssa_state_county_code VARCHAR(10),
-        fips_state_county_code VARCHAR(10),
-        state VARCHAR(2),
-        county VARCHAR(50),
-        enrollment VARCHAR(100),
-        PRIMARY KEY (contract_id, plan_id)
-    );"
-    $PSQL "INSERT INTO merged_contracts_enrollments
-           SELECT 
-               CONCAT(c.contract_id, '_', c.plan_id) AS primary_id,
-               c.contract_id,
-               c.plan_id,
-               c.organization_type,
-               c.plan_type,
-               c.offers_part_d,
-               c.snp_plan,
-               c.eghp,
-               c.organization_name,
-               c.organization_marketing_name,
-               c.plan_name,
-               c.parent_organization,
-               c.contract_effective_date,
-               e.ssa_state_county_code,
-               e.fips_state_county_code,
-               e.state,
-               e.county,
-               e.enrollment
-           FROM 
-               contracts c
-           INNER JOIN 
-               enrollments e
-           ON 
-               c.contract_id = e.contract_id 
-               AND c.plan_id = e.plan_id;"
-    echo "Merged contracts and enrollments into merged_contracts_enrollments"
+create_table_enrollments() {
+  local query="CREATE TABLE enrollments (
+    postgres_id SERIAL PRIMARY KEY,
+    contract_id VARCHAR(10),
+    plan_id VARCHAR(10),
+    ssa_state_county_code VARCHAR(10),
+    fips_state_county_code VARCHAR(10),
+    state VARCHAR(2),
+    county VARCHAR(50),
+    enrollment VARCHAR(100)
+  );"
+  if $PSQL "$query"; then
+    render_header "Created Table enrollments"
+  else
+    render_header "Error: Failed to create table enrollments"
+  fi
+  create_database_and_tables_menu
 }
 
-DO_THE_THING(){
-  DELETE_DATABASE
-  CREATE_DATABASE
-  CREATE_TABLE_CONTRACTS
-  CREATE_TABLE_ENROLLMENTS
-  CREATE_TABLE_MASTER
-  IMPORT_CONTRACTS_2025_06
-  IMPORT_ENROLLMENTS_2025_06
-  MERGE_TABLES
+create_table_master() {
+  local query="CREATE TABLE master (
+    postgres_id SERIAL PRIMARY KEY,
+    contract_id VARCHAR(10),
+    plan_id VARCHAR(10),
+    ssa_state_county_code VARCHAR(10),
+    fips_state_county_code VARCHAR(10),
+    state VARCHAR(2),
+    county VARCHAR(50),
+    enrollment VARCHAR(100),
+    organization_type VARCHAR,
+    plan_type VARCHAR,
+    offers_part_d BOOLEAN,
+    snp_plan BOOLEAN,
+    eghp BOOLEAN,
+    organization_name VARCHAR,
+    organization_marketing_name VARCHAR,
+    plan_name VARCHAR,
+    parent_organization VARCHAR,
+    contract_effective_date VARCHAR,
+    PRIMARY KEY (contract_id, plan_id)
+  );"
+  if $PSQL "$query"; then
+    render_header "Created Table master"
+  else
+    render_header "Error: Failed to create table master"
+  fi
+  create_database_and_tables_menu
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-##### ##### DATABASE ##### #####
-
-DATABASE_MANAGEMENT_MENU(){
-  clear
-  gum style \
-    --border thick \
-    --margin ".5" \
-    --padding "1 2" \
-    --border-foreground "#04B575" \
-    "Database Management Menu"
-  OPTIONS=$(gum choose --header "Database & Table Management Menu: " "Return to Main Menu" "Schemas" "Create" "Delete" "Insert" "Select" "Update")
-    case "$OPTIONS" in
-     "Return to Main Menu") MAIN_MENU ;;
-     "Schemas") LIST_SCHEMA_MENU ;;
-     "Create") CREATE_DATABASE_AND_TABLES_MENU ;;
-     "Delete") DELETE_DATABASE_MANAGEMENT_MENU ;;
-     "Insert") INSERT_DATA_MENU ;;
-     "Select") SELECT_DATA_MENU ;;
-     "Update") UPDATE_DATA_MENU ;;
-    esac
+delete_database() {
+  if $PSQL_DEFAULT "DROP DATABASE IF EXISTS $DB_NAME;"; then
+    render_header "Dropped Database $DB_NAME"
+  else
+    render_header "Error: Failed to drop database $DB_NAME"
+  fi
+  delete_database_management_menu
 }
 
-##### ##### LINUX ##### #####
-
-ARCH_LINUX_MANAGEMENT_MENU(){
-	clear
-  gum style \
-    --border thick \
-    --margin ".5" \
-    --padding "1 2" \
-    --border-foreground "#04B575" \
-    "Database Management Menu"
-  OPTIONS=$(gum choose --header "Database & Table Management Menu: " "Return to Main Menu" "System-Wide Update")
-    case "$OPTIONS" in
-     "Return to Main Menu") MAIN_MENU ;;
-     "System Update") ARCH_SYSTEM_UPDATE ;;
-    esac
+delete_table_master() {
+  if $PSQL "DROP TABLE IF EXISTS master;"; then
+    render_header "Dropped Table master"
+  else
+    render_header "Error: Failed to drop table master"
+  fi
+  delete_database_management_menu
 }
 
-ARCH_SYSTEM_UPDATE(){
-  pacman -Syu
-  ARCH_LINUX_MANAGEMENT_MENU
+delete_table_contracts() {
+  if $PSQL "DROP TABLE IF EXISTS contracts;"; then
+    render_header "Dropped Table contracts"
+  else
+    render_header "Error: Failed to drop table contracts"
+  fi
+  delete_database_management_menu
 }
 
-##### ##### ##### ##### #####
-
-POSTGREST_MANAGEMENT_MENU(){
-	if [[ $1 ]]
-	then
-		echo -e "\n$1"
-	fi
-	clear
-	echo -e "\n~~~~~ PostgREST Management Menu ~~~~~"
-	echo -e "\n0.) Return to Main Menu\n1.) Create Schema 'api'\n2.) Create Table 'api.todos'\n3.) Create Role 'web_anon'\n4.) Create role 'authenticator'\n5.) Create 'tutorial.conf'\n6.) Run PostgREST Tutorial\n7.) Create Role Todo User\n"
-	echo "ENTER COMMAND: "
-	read POSTGREST_MANAGEMENT_MENU_SELECTION
-	case $POSTGREST_MANAGEMENT_MENU_SELECTION in
-	0) MAIN_MENU ;;
-	1) POSTGREST_CREATE_SCHEMA_API ;;
-	2) POSTGREST_CREATE_TABLE_API_TODOS ;;
-	3) POSTGREST_CREATE_ROLE_WEBANON ;;
-	4) POSTGREST_CREATE_ROLE_AUTHENTICATOR ;;
-	5) POSTGREST_CREATE_TUTORIAL_CONF ;;
-	6) POSTGREST_START_TUTORIAL_SERVER ;;
-	7) POSTGREST_CREATE_ROLE_TODO_USER ;;
-	*) POSTGREST_MANAGEMENT_MENU "Please enter a valid option." ;;
-esac
+delete_table_enrollments() {
+  if $PSQL "DROP TABLE IF EXISTS enrollments;"; then
+    render_header "Dropped Table enrollments"
+  else
+    render_header "Error: Failed to drop table enrollments"
+  fi
+  delete_database_management_menu
 }
 
-POSTGREST_CREATE_SCHEMA_API(){
-	psql -d medicare -U postgres -c "create schema api;"
-	sleep 2
-	POSTGREST_MANAGEMENT_MENU "Created Schema api;"
+# Import Operations
+import_enrollments() {
+  local csv_path="${CSV_DIR}/${ENROLLMENT_CSV}"
+  if [[ ! -f "$csv_path" ]]; then
+    render_header "Error: $ENROLLMENT_CSV not found in $CSV_DIR"
+    insert_data_menu
+    return
+  fi
+  local query="\COPY enrollments(contract_id, plan_id, ssa_state_county_code, fips_state_county_code, state, county, enrollment) FROM '$csv_path' DELIMITER ',' CSV HEADER;"
+  if $PSQL "$query"; then
+    render_header "Imported $ENROLLMENT_CSV into enrollments"
+  else
+    render_header "Error: Failed to import $ENROLLMENT_CSV"
+  fi
+  insert_data_menu
 }
 
-POSTGREST_CREATE_TABLE_API_TODOS(){
-	psql -d medicare -U postgres -c "create table api.todos (id int primary key generated by default as identity, 
-		done boolean not null default false,
-		task text not null,
-		due timestamptz);"
-	psql -d medicare -U postgres -c "insert into api.todos (task) values
-		('finish tutorial 0'), 
-		('pat self on back');"
-	sleep 2
-	POSTGREST_MANAGEMENT_MENU "Created table api.todos"
+import_contracts() {
+  local csv_path="${CSV_DIR}/${CONTRACT_CSV}"
+  if [[ ! -f "$csv_path" ]]; then
+    render_header "Error: $CONTRACT_CSV not found in $CSV_DIR"
+    insert_data_menu
+    return
+  fi
+  local query="\COPY contracts(contract_id, plan_id, organization_type, plan_type, offers_part_d, snp_plan, eghp, organization_name, organization_marketing_name, plan_name, parent_organization, contract_effective_date) FROM '$csv_path' DELIMITER ',' CSV HEADER;"
+  if $PSQL "$query"; then
+    render_header "Imported $CONTRACT_CSV into contracts"
+  else
+    render_header "Error: Failed to import $CONTRACT_CSV"
+  fi
+  insert_data_menu
 }
 
-POSTGREST_CREATE_ROLE_WEBANON(){
-	psql -d medicare -U postgres -c "create role web_anon nologin;
-		grant usage on schema api to web_anon;
-		grant select on api.todos to web_anon;"
-	sleep 2
-	POSTGREST_MANAGEMENT_MENU "Executed Command"
+# File Operations
+download_zip() {
+  render_header "Download functionality not implemented"
+  importer_menu
 }
 
-POSTGREST_CREATE_ROLE_AUTHENTICATOR(){
-	psql -d medicare -U postgres -c "create role authenticator noinherit login password 'mysecretpassword';
-		grant web_anon to authenticator;"
-	sleep 2
-	POSTGREST_MANAGEMENT_MENU "Executed Command"
+delete_csv() {
+  local csv_file="${CSV_DIR}/$1"
+  if [[ -f "$csv_file" ]]; then
+    if rm "$csv_file"; then
+      render_header "Deleted $1"
+    else
+      render_header "Error: Failed to delete $1"
+    fi
+  else
+    render_header "Error: $1 not found"
+  fi
+  importer_menu
 }
 
-POSTGREST_CREATE_TUTORIAL_CONF(){
-	touch tutorial.conf
-	echo "db-uri = 'postgres://authenticator:mysecretpassword@localhost:5432/postgres'" >> tutorial.conf
-	echo "db-schemas = 'api'" >> tutorial.conf
-	echo "db-anon-role = 'web_anon'" >> tutorial.conf
-	echo "server-port = 80" >> tutorial.conf
-	sleep 2
-	POSTGREST_MANAGEMENT_MENU "Executed Command"
+delete_zip() {
+  local zip_path="${ZIP_DIR}/${ZIP_FILE}"
+  if [[ -f "$zip_path" ]]; then
+    if rm "$zip_path"; then
+      render_header "Deleted $ZIP_FILE"
+    else
+      render_header "Error: Failed to delete $ZIP_FILE"
+    fi
+  else
+    render_header "Error: $ZIP_FILE not found"
+  fi
+  importer_menu
 }
 
-POSTGREST_START_TUTORIAL_SERVER(){
-	postgrest tutorial.conf
+unzip_cpsc_enrollment() {
+  local zip_path="${ZIP_DIR}/${ZIP_FILE}"
+  if [[ ! -f "$zip_path" ]]; then
+    render_header "Error: $ZIP_FILE not found in $ZIP_DIR"
+    importer_menu
+    return
+  fi
+  mkdir -p "$CSV_DIR"
+  if gum spin --spinner dot --title "Unzipping $ZIP_FILE..." -- unzip -o "$zip_path" -d "$CSV_DIR"; then
+    render_header "Unzipped $ZIP_FILE to $CSV_DIR"
+  else
+    render_header "Error: Failed to unzip $ZIP_FILE"
+  fi
+  importer_menu
 }
 
-
-POSTGREST_CREATE_ROLE_TODO_USER(){
-	psql -d medicare -U postgres -c "create role todo_user nologin;
-	grant todo_user to authenticator;
-	grant usage on schema api to todo_user;
-	grant all on api.todos to todo_user;"
-	sleep 2
-	POSTGREST_MANAGEMENT_MENU "Executed Command"
+# Merge Tables
+merge_tables() {
+  local query="INSERT INTO master (
+    contract_id, plan_id, organization_type, plan_type, offers_part_d, snp_plan, eghp,
+    organization_name, organization_marketing_name, plan_name, parent_organization,
+    contract_effective_date, ssa_state_county_code, fips_state_county_code, state, county, enrollment
+  ) SELECT
+    c.contract_id, c.plan_id, c.organization_type, c.plan_type, c.offers_part_d, c.snp_plan, c.eghp,
+    c.organization_name, c.organization_marketing_name, c.plan_name, c.parent_organization,
+    c.contract_effective_date, e.ssa_state_county_code, e.fips_state_county_code, e.state, e.county, e.enrollment
+  FROM contracts c
+  INNER JOIN enrollments e ON c.contract_id = e.contract_id AND c.plan_id = e.plan_id;"
+  if $PSQL "$query"; then
+    render_header "Merged contracts and enrollments into master"
+  else
+    render_header "Error: Failed to merge tables"
+  fi
+  importer_menu
 }
 
-##### ########## ##### ##### ##### #####
-
-GITHUB_MANAGEMENT_MENU(){
-  clear
-  gum style \
-    --border thick \
-    --margin ".5" \
-    --padding "1 2" \
-    --border-foreground "#04B575" \
-    "Database Management Menu"
-  OPTIONS=$(gum choose --header "Github Management Menu: " "Return to Main Menu" "Commit" "Push")
-    case "$OPTIONS" in
-     "Return to Main Menu") MAIN_MENU ;;
-     "Add app.sh") GITHUB_ADD ;;
-     "Commit") GITHUB_COMMIT ;;
-     "Push") GITHUB_PUSH ;;
-    esac
+# Full Import Process
+do_the_thing() {
+  delete_database
+  create_database
+  create_table_contracts
+  create_table_enrollments
+  create_table_master
+  unzip_cpsc_enrollment
+  import_contracts
+  import_enrollments
+  merge_tables
 }
 
-GITHUB_ADD(){
-	git add app.sh
-	GITHUB_MANAGEMENT_MENU
+# Schema and Table Listing
+list_databases() {
+  $PSQL_DEFAULT "\l" | gum table
+  list_schema_menu
 }
 
-GITHUB_COMMIT(){
-	git commit -m "Committed from the command line"
-	GITHUB_MANAGEMENT_MENU
+list_tables() {
+  $PSQL "\dt+" | gum table
+  list_schema_menu
 }
 
-GITHUB_PUSH(){
-	git push -u origin HEAD
-	GITHUB_MANAGEMENT_MENU
+list_table_contracts() {
+  $PSQL "\d contracts" | gum table
+  list_schema_menu
 }
 
-##### ##### ##### ##### #####
-
-LIST_SCHEMA_MENU(){
-   if [[ $1 ]]
-   then
-      echo -e "\n$1"
-   fi
-   echo -e "\n~~~~~ Schema Menu ~~~~~"
-   echo -e "\n0. Return To Database Management Menu\n1. List Databases\n2. List Tables\n3. List Table contracts\n4. List Table enrollments\n"
-   echo "Enter Command: "
-   read DATABASE_MANAGEMENT_MENU_SELECTION
-   case $DATABASE_MANAGEMENT_MENU_SELECTION in
-   0) DATABASE_MANAGEMENT_MENU ;;
-   1) LIST_DATABASES ;;
-   2) LIST_TABLES ;;
-   3) LIST_TABLE_CONTRACTS ;;
-   4) LIST_TABLE_ENROLLMENTS ;;
-   *) LIST_SCHEMA_MENU "Please enter a valid option." ;;
-esac
+list_table_enrollments() {
+  $PSQL "\d enrollments" | gum table
+  list_schema_menu
 }
 
-LIST_DATABASES(){
-	$PSQL_CreateDatabase "\l"
-	LIST_SCHEMA_MENU "Listed Databases"
+# Select Data (Placeholder Implementations)
+select_all_contracts() {
+  $PSQL "SELECT * FROM contracts LIMIT 10;" | gum table
+  select_data_menu
 }
 
-LIST_TABLES(){
-	$PSQL "\dt+"
-	LIST_SCHEMA_MENU "Listed Tables"
+select_all_enrollments() {
+  $PSQL "SELECT * FROM enrollments LIMIT 10;" | gum table
+  select_data_menu
 }
 
-LIST_TABLE_CONTRACTS(){
-	$PSQL "\d contracts"
-	LIST_SCHEMA_MENU "Listed Table contracts"
+# Update Data (Placeholder Implementations)
+update_contracts() {
+  render_header "Update contracts functionality not implemented"
+  update_data_menu
 }
 
-LIST_TABLE_ENROLLMENTS(){
-	$PSQL "\d enrollments"
-	LIST_SCHEMA_MENU "Listed Table enrollments"
+update_enrollments() {
+  render_header "Update enrollments functionality not implemented"
+  update_data_menu
 }
 
-##### ##### CREATE ##### #####
-
-CREATE_DATABASE_AND_TABLES_MENU(){
-   if [[ $1 ]]
-   then
-      echo -e "\n$1"
-   fi
-   echo -e "\n~~~~~ Create Database & Tables Menu ~~~~~"
-   echo -e "\n0. Return To Database Management Menu\n1. Create Database medicare\n2. Create Table contracts\n3. Create Table enrollments"
-   echo "Enter Command: "
-   read DATABASE_MANAGEMENT_MENU_SELECTION
-   case $DATABASE_MANAGEMENT_MENU_SELECTION in
-   0) DATABASE_MANAGEMENT_MENU ;;
-   1) CREATE_DATABASE ;;
-   2) CREATE_TABLE_CONTRACTS ;;
-   3) CREATE_TABLE_ENROLLMENTS ;;
-   *) CREATE_DATABASE_AND_TABLES_MENU "Please enter a valid option." ;;
-esac
+# Git Operations
+github_add() {
+  if git add app.sh; then
+    render_header "Added app.sh to git staging"
+  else
+    render_header "Error: Failed to add app.sh"
+  fi
+  github_management_menu
 }
 
-CREATE_TABLE_CONTRACTS() {
-    $PSQL "CREATE TABLE contracts();"
-    $PSQL "ALTER TABLE contracts ADD COLUMN postgres_id SERIAL PRIMARY KEY;"
-    $PSQL "ALTER TABLE contracts ADD COLUMN contract_id VARCHAR(10);"
-    $PSQL "ALTER TABLE contracts ADD COLUMN plan_id VARCHAR(10);"
-    $PSQL "ALTER TABLE contracts ADD COLUMN organization_type VARCHAR;"
-    $PSQL "ALTER TABLE contracts ADD COLUMN plan_type VARCHAR;"
-    $PSQL "ALTER TABLE contracts ADD COLUMN offers_part_d BOOLEAN;"
-    $PSQL "ALTER TABLE contracts ADD COLUMN snp_plan BOOLEAN;"
-    $PSQL "ALTER TABLE contracts ADD COLUMN eghp BOOLEAN;"
-    $PSQL "ALTER TABLE contracts ADD COLUMN organization_name VARCHAR;"
-    $PSQL "ALTER TABLE contracts ADD COLUMN organization_marketing_name VARCHAR;"
-    $PSQL "ALTER TABLE contracts ADD COLUMN plan_name VARCHAR;"
-    $PSQL "ALTER TABLE contracts ADD COLUMN parent_organization VARCHAR;"
-    $PSQL "ALTER TABLE contracts ADD COLUMN contract_effective_date VARCHAR;"
-    echo "Created Tables contracts & Altered!!!"
+github_commit() {
+  local message
+  message=$(gum input --placeholder "Enter commit message" --value "Committed from HealthcareCLI")
+  if git commit -m "$message"; then
+    render_header "Committed changes"
+  else
+    render_header "Error: Failed to commit"
+  fi
+  github_management_menu
 }
 
-CREATE_TABLE_ENROLLMENTS() {
-    $PSQL "CREATE TABLE enrollments();"
-    $PSQL "ALTER TABLE enrollments ADD COLUMN postgres_id SERIAL PRIMARY KEY;"
-    $PSQL "ALTER TABLE enrollments ADD COLUMN contract_id VARCHAR(10);"
-    $PSQL "ALTER TABLE enrollments ADD COLUMN plan_id VARCHAR(10);"
-    $PSQL "ALTER TABLE enrollments ADD COLUMN ssa_state_county_code VARCHAR(10);"
-    $PSQL "ALTER TABLE enrollments ADD COLUMN fips_state_county_code VARCHAR(10);"
-    $PSQL "ALTER TABLE enrollments ADD COLUMN state VARCHAR(2);"
-    $PSQL "ALTER TABLE enrollments ADD COLUMN county VARCHAR(50);"
-    $PSQL "ALTER TABLE enrollments ADD COLUMN enrollment VARCHAR(100);"
-    echo "Created Table enrollments!!!"
+github_push() {
+  if git push -u origin HEAD; then
+    render_header "Pushed to remote repository"
+  else
+    render_header "Error: Failed to push"
+  fi
+  github_management_menu
 }
 
-CREATE_TABLE_MASTER() {
-    $PSQL "CREATE TABLE master();"
-    $PSQL "ALTER TABLE master ADD COLUMN postgres_id SERIAL PRIMARY KEY;"
-    $PSQL "ALTER TABLE master ADD COLUMN contract_id VARCHAR(10);"
-    $PSQL "ALTER TABLE master ADD COLUMN plan_id VARCHAR(10);"
-    $PSQL "ALTER TABLE master ADD COLUMN ssa_state_county_code VARCHAR(10);"
-    $PSQL "ALTER TABLE master ADD COLUMN fips_state_county_code VARCHAR(10);"
-    $PSQL "ALTER TABLE master ADD COLUMN state VARCHAR(2);"
-    $PSQL "ALTER TABLE master ADD COLUMN county VARCHAR(50);"
-    $PSQL "ALTER TABLE master ADD COLUMN enrollment VARCHAR(100);"
-    $PSQL "ALTER TABLE master ADD COLUMN organization_type VARCHAR;"
-    $PSQL "ALTER TABLE master ADD COLUMN plan_type VARCHAR;"
-    $PSQL "ALTER TABLE master ADD COLUMN offers_part_d BOOLEAN;"
-    $PSQL "ALTER TABLE master ADD COLUMN snp_plan BOOLEAN;"
-    $PSQL "ALTER TABLE master ADD COLUMN eghp BOOLEAN;"
-    $PSQL "ALTER TABLE master ADD COLUMN organization_name VARCHAR;"
-    $PSQL "ALTER TABLE master ADD COLUMN organization_marketing_name VARCHAR;"
-    $PSQL "ALTER TABLE master ADD COLUMN plan_name VARCHAR;"
-    $PSQL "ALTER TABLE master ADD COLUMN parent_organization VARCHAR;"
-    $PSQL "ALTER TABLE master ADD COLUMN contract_effective_date VARCHAR;"
-    echo "Created Table master!!!"
+# PostgREST Operations
+postgrest_create_schema_api() {
+  if $PSQL "CREATE SCHEMA api;"; then
+    render_header "Created Schema api"
+  else
+    render_header "Error: Failed to create schema api"
+  fi
+  postgrest_management_menu
 }
 
-CREATE_DATABASE(){
-	$PSQL_CreateDatabase "CREATE DATABASE medicare;"
+postgrest_create_table_api_todos() {
+  local query="CREATE TABLE api.todos (
+    id INT PRIMARY KEY GENERATED BY DEFAULT AS IDENTITY,
+    done BOOLEAN NOT NULL DEFAULT FALSE,
+    task TEXT NOT NULL,
+    due TIMESTAMPTZ
+  ); INSERT INTO api.todos (task) VALUES
+    ('finish tutorial 0'),
+    ('pat self on back');"
+  if $PSQL "$query"; then
+    render_header "Created table api.todos"
+  else
+    render_header "Error: Failed to create table api.todos"
+  fi
+  postgrest_management_menu
 }
 
-OLD_CREATE_TABLE_CONTRACTS(){
-	$PSQL "CREATE TABLE contracts();"
-	$PSQL "ALTER TABLE contracts ADD COLUMN postgres_id SERIAL PRIMARY KEY ;"
-	$PSQL "ALTER TABLE contracts ADD COLUMN contract_id VARCHAR;"
-	$PSQL "ALTER TABLE contracts ADD COLUMN plan_id SMALLINT;"
-	$PSQL "ALTER TABLE contracts ADD COLUMN organization_type VARCHAR;"
-	$PSQL "ALTER TABLE contracts ADD COLUMN plan_type VARCHAR;"
-	$PSQL "ALTER TABLE contracts ADD COLUMN offers_part_d BOOLEAN;"
-	$PSQL "ALTER TABLE contracts ADD COLUMN snp_plan BOOLEAN;"
-	$PSQL "ALTER TABLE contracts ADD COLUMN eghp BOOLEAN;"
-	$PSQL "ALTER TABLE contracts ADD COLUMN organization_name VARCHAR;"
-	$PSQL "ALTER TABLE contracts ADD COLUMN organization_marketing_name VARCHAR;"
-	$PSQL "ALTER TABLE contracts ADD COLUMN plan_name VARCHAR;"
-	$PSQL "ALTER TABLE contracts ADD COLUMN parent_organization VARCHAR;"
-	$PSQL "ALTER TABLE contracts ADD COLUMN contract_effective_date DATE;"
-	CREATE_DATABASE_AND_TABLES_MENU "Created Tables contracts & Altered"
+postgrest_create_role_web_anon() {
+  local query="CREATE ROLE web_anon NOLOGIN;
+    GRANT USAGE ON SCHEMA api TO web_anon;
+    GRANT SELECT ON api.todos TO web_anon;"
+  if $PSQL "$query"; then
+    render_header "Created role web_anon"
+  else
+    render_header "Error: Failed to create role web_anon"
+  fi
+  postgrest_management_menu
 }
 
-OLD_CREATE_TABLE_ENROLLMENTS(){
-	$PSQL "CREATE TABLE enrollments();"
-	$PSQL "ALTER TABLE enrollments ADD COLUMN postgres_id SERIAL PRIMARY KEY;"
-	$PSQL "ALTER TABLE enrollments ADD COLUMN contract_id VARCHAR(10);"
-	$PSQL "ALTER TABLE enrollments ADD COLUMN plan_id SMALLINT;"
-	$PSQL "ALTER TABLE enrollments ADD COLUMN ssa_state_county_code VARCHAR(10);"
-	$PSQL "ALTER TABLE enrollments ADD COLUMN fips_state_county_code VARCHAR(10);"
-	$PSQL "ALTER TABLE enrollments ADD COLUMN state VARCHAR(2);"
-	$PSQL "ALTER TABLE enrollments ADD COLUMN county VARCHAR(50);"
-	$PSQL "ALTER TABLE enrollments ADD COLUMN enrollment VARCHAR(100);"
-	CREATE_DATABASE_AND_TABLES_MENU "Created Table enrollments & Altered"
+postgrest_create_role_authenticator() {
+  local query="CREATE ROLE authenticator NOINHERIT LOGIN PASSWORD 'mysecretpassword';
+    GRANT web_anon TO authenticator;"
+  if $PSQL "$query"; then
+    render_header "Created role authenticator"
+  else
+    render_header "Error: Failed to create role authenticator"
+  fi
+  postgrest_management_menu
 }
 
-##### ##### ##### ##### #####
-
-DELETE_DATABASE_MANAGEMENT_MENU(){
-   if [[ $1 ]]
-   then
-      echo -e "\n$1"
-   fi
-   echo -e "\n~~~~~ Delete Database & Tables Menu ~~~~~"
-   echo -e "\n0. Return To Database Management Menu\n1. Delete Database medicare\n2. Delete Table contracts\n3. Delete Table enrollments"
-   echo "Enter Command: "
-   read DATABASE_MANAGEMENT_MENU_SELECTION
-   case $DATABASE_MANAGEMENT_MENU_SELECTION in
-   0) DATABASE_MANAGEMENT_MENU ;;
-   1) DELETE_DATABASE ;;
-   2) DELETE_TABLE_CONTRACTS ;;
-   3) DELETE_TABLE_ENROLLMENTS ;;
-   *) DELETE_DATABASE_MANAGEMENT_MENU "Please enter a valid option." ;;
-esac
+postgrest_create_tutorial_conf() {
+  local conf_file="tutorial.conf"
+  cat << EOF > "$conf_file"
+db-uri = 'postgres://authenticator:mysecretpassword@localhost:5432/postgres'
+db-schemas = 'api'
+db-anon-role = 'web_anon'
+server-port = 80
+EOF
+  if [[ -f "$conf_file" ]]; then
+    render_header "Created $conf_file"
+  else
+    render_header "Error: Failed to create $conf_file"
+  fi
+  postgrest_management_menu
 }
 
-DELETE_DATABASE(){
-	$PSQL_CreateDatabase "DROP DATABASE medicare;"
+postgrest_start_tutorial_server() {
+  if postgrest tutorial.conf; then
+    render_header "Started PostgREST server"
+  else
+    render_header "Error: Failed to start PostgREST server"
+  fi
+  postgrest_management_menu
 }
 
-DELETE_TABLE_MASTER(){
-  $PSQL "DROP TABLE master;"
-  DELETE_DATABASE_MANAGEMENT_MENU "Dropped Table master"
+postgrest_create_role_todo_user() {
+  local query="CREATE ROLE todo_user NOLOGIN;
+    GRANT todo_user TO authenticator;
+    GRANT USAGE ON SCHEMA api TO todo_user;
+    GRANT ALL ON api.todos TO todo_user;"
+  if $PSQL "$query"; then
+    render_header "Created role todo_user"
+  else
+    render_header "Error: Failed to create role todo_user"
+  fi
+  postgrest_management_menu
 }
 
-DELETE_TABLE_CONTRACTS(){
-	$PSQL "DROP TABLE contracts;"
-	DELETE_DATABASE_MANAGEMENT_MENU "Dropped Table contracts"
+# Arch Linux Operations
+arch_system_update() {
+  if sudo pacman -Syu --noconfirm; then
+    render_header "System update completed"
+  else
+    render_header "Error: Failed to update system"
+  fi
+  arch_linux_management_menu
 }
 
-DELETE_TABLE_ENROLLMENTS(){
-	$PSQL "DROP TABLE enrollments;"
-	DELETE_DATABASE_MANAGEMENT_MENU "Dropped Table enrollments"
+# Exit Program
+exit_program() {
+  render_header "Closing HealthcareCLI"
+  exit 0
 }
 
-##### ##### INSERT / IMPORT ##### #####
-
-
-
-##### ##### ##### ##### #####
-
-SELECT_DATA_MENU(){
-   if [[ $1 ]]
-   then
-      echo -e "\n$1"
-   fi
-   echo -e "\n~~~~~ Insert Data Menu ~~~~~"
-   echo -e "\n0. Return To Database Management Menu\n1. Select All Bikes\n"
-   echo "Enter Command: "
-   read DATABASE_MANAGEMENT_MENU_SELECTION
-   case $DATABASE_MANAGEMENT_MENU_SELECTION in
-   0) DATABASE_MANAGEMENT_MENU ;;
-   1) SELECT_ALL_BIKES ;;
-   *) SELECT_DATA_MENU "Please enter a valid option." ;;
-esac
-}
-
-SELECT_ALL_BIKES(){
-	AVAILABLE_BIKES=$($PSQL "SELECT bike_id, type, size FROM bikes WHERE available=TRUE ORDER BY bike_id")
-	echo "$AVAILABLE_BIKES"
-	SELECT_DATA_MENU
-}
-
-##### ##### ##### ##### #####
-
-UPDATE_DATA_MENU(){
-   if [[ $1 ]]
-   then
-      echo -e "\n$1"
-   fi
-   echo -e "\n~~~~~ Update Bikes Available ~~~~~"
-   echo -e "\n0. Return To Database Management Menu\n1. Update All Bikes as Available\n2. Update All Bikes as Unavailable\n3. Update all bikes available except BMX\n"
-   echo "Enter Command: "
-   read UPDATE_MENU_SELECTION
-   case $UPDATE_MENU_SELECTION in
-   0) DATABASE_MANAGEMENT_MENU ;;
-   1) UPDATE_ALL_BIKES_AVAILABLE ;;
-   2) UPDATE_ALL_BIKES_UNAVAILABLE ;;
-   3) UPDATE_ALL_BIKES_AVAILABLE_EXCEPT_BMX ;;
-   *) SELECT_DATA_MENU "Please enter a valid option." ;;
-esac
-}
-
-UPDATE_ALL_BIKES_AVAILABLE(){
-	AVAILABLE_BIKES=$($PSQL "UPDATE bikes SET AVAILABLE = true;")
-	UPDATE_DATA_MENU
-}
-
-UPDATE_ALL_BIKES_AVAILABLE_EXCEPT_BMX(){
-	AVAILABLE_BIKES=$($PSQL "UPDATE bikes SET available = TRUE WHERE type != 'BMX';")
-	UPDATE_DATA_MENU
-}
-
-UPDATE_ALL_BIKES_UNAVAILABLE(){
-	AVAILABLE_BIKES=$($PSQL "UPDATE bikes SET AVAILABLE = false;")
-	UPDATE_DATA_MENU
-}
-
-##### ##### ##### ##### #####
-
-EXIT(){
-   echo -e "\nClosing Program.\n"
-}
-
-MAIN_MENU
+# Start the application
+main_menu
