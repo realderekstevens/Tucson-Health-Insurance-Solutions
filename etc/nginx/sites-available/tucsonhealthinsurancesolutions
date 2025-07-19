@@ -1,37 +1,217 @@
+# Main domain HTTPS server
 server {
-	root /var/www/tucsonhealthinsurancesolutions ;
-	index index.html index.htm ;
-	server_name tucsonhealthinsurancesolutions.com www.tucsonhealthinsurancesolutions.com ;
+	listen [::]:443 ssl;
+	listen 443 ssl;
+	server_name tucsonhealthinsurancesolutions.com www.tucsonhealthinsurancesolutions.com;
+	
+	root /var/www/tucsonhealthinsurancesolutions;
+	index index.html index.htm;
+
+	access_log /var/log/nginx/tucsonhealthinsurancesolutions.access.log;
+	error_log /var/log/nginx/tucsonhealthinsurancesolutions.error.log;
+
 	location / {
 		try_files $uri $uri/ =404;
 	}
 
-    listen [::]:443 ssl; # managed by Certbot
-    listen 443 ssl; # managed by Certbot
-    ssl_certificate /etc/letsencrypt/live/buckbreaker.com/fullchain.pem; # managed by Certbot
-    ssl_certificate_key /etc/letsencrypt/live/buckbreaker.com/privkey.pem; # managed by Certbot
-    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
-    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.1-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
 
+    # Static file caching
+    location ~* \.(jpg|jpeg|png|gif|ico|css|js)$ {
+        expires 30d;
+        access_log off;
+    }
 
+    # Custom 404 page
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
+    }
 }
+
+# Arizona subdomain HTTPS server
 server {
-    if ($host = www.tucsonhealthinsurancesolutions.com) {
-        return 301 https://$host$request_uri;
-    } # managed by Certbot
+	listen [::]:443 ssl; # IPv6
+	listen 443 ssl; # IPv4
+	server_name www.arizona.tucsonhealthinsurancesolutions.com arizona.tucsonhealthinsurancesolutions.com az.tucsonhealthinsurancesolutions.com www.az.tucsonhealthinsurancesolutions.com;
 
+	root /var/www/tucsonhealthinsurancesolutions/arizona;
+	index index.html index.htm;
 
-    if ($host = tucsonhealthinsurancesolutions.com) {
-        return 301 https://$host$request_uri;
-    } # managed by Certbot
+	access_log /var/log/nginx/arizona.tucsonhealthinsurancesolutions.access.log;
+	error_log /var/log/nginx/arizona.tucsonhealthinsurancesolutions.error.log;
 
-
-	listen 80 ;
-	listen [::]:80 ;
-	server_name tucsonhealthinsurancesolutions.com www.tucsonhealthinsurancesolutions.com ;
-    return 404; # managed by Certbot
-
-
-
-
+	location / {
+		try_files $uri $uri/ =404;
+	}
+	# SSL configuration
+    	ssl_certificate /etc/letsencrypt/live/tucsonhealthinsurancesolutions.com/fullchain.pem; # managed by Certbot
+    	ssl_certificate_key /etc/letsencrypt/live/tucsonhealthinsurancesolutions.com/privkey.pem; # managed by Certbot
+    	include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    	ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 }
+
+# Blog subdomain HTTPS server
+server {
+	listen [::]:443 ssl; # IPv6
+	listen 443 ssl; # IPv4
+	server_name www.blog.tucsonhealthinsurancesolutions.com blog.tucsonhealthinsurancesolutions.com;
+
+	root /var/www/tucsonhealthinsurancesolutions/blog;
+	index index.html index.htm;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+	# SSL configuration
+    	ssl_certificate /etc/letsencrypt/live/tucsonhealthinsurancesolutions.com/fullchain.pem; # managed by Certbot
+    	ssl_certificate_key /etc/letsencrypt/live/tucsonhealthinsurancesolutions.com/privkey.pem; # managed by Certbot
+    	include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    	ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+# California subdomain HTTPS server
+server {
+	listen [::]:443 ssl; # IPv6
+	listen 443 ssl; # IPv4
+	server_name www.california.tucsonhealthinsurancesolutions.com california.tucsonhealthinsurancesolutions.com www.ca.tucsonhealthinsurancesolutions.com ca.tucsonhealthinsurancesolutions.com;
+
+	root /var/www/tucsonhealthinsurancesolutions/california;
+	index index.html index.htm;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+	# SSL configuration
+    	ssl_certificate /etc/letsencrypt/live/tucsonhealthinsurancesolutions.com/fullchain.pem; # managed by Certbot
+    	ssl_certificate_key /etc/letsencrypt/live/tucsonhealthinsurancesolutions.com/privkey.pem; # managed by Certbot
+    	include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    	ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+# Florida subdomain HTTPS server
+server {
+	listen [::]:443 ssl; # IPv6
+	listen 443 ssl; # IPv4
+	server_name www.florida.tucsonhealthinsurancesolutions.com florida.tucsonhealthinsurancesolutions.com www.fl.tucsonhealthinsurancesolutions.com fl.tucsonhealthinsurancesolutions.com;
+
+	root /var/www/tucsonhealthinsurancesolutions/florida;
+	index index.html index.htm;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+
+	# SSL configuration
+    	ssl_certificate /etc/letsencrypt/live/tucsonhealthinsurancesolutions.com/fullchain.pem; # managed by Certbot
+    	ssl_certificate_key /etc/letsencrypt/live/tucsonhealthinsurancesolutions.com/privkey.pem; # managed by Certbot
+    	include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    	ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+# Michigan subdomain HTTPS server
+server {
+	listen [::]:443 ssl; # IPv6
+	listen 443 ssl; # IPv4
+	server_name www.michigan.tucsonhealthinsurancesolutions.com michigan.tucsonhealthinsurancesolutions.com www.mi.tucsonhealthinsurancesolutions.com mi.tucsonhealthinsurancesolutions.com;
+
+	root /var/www/tucsonhealthinsurancesolutions/michigan;
+	index index.html index.htm;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+
+	# SSL configuration
+    	ssl_certificate /etc/letsencrypt/live/tucsonhealthinsurancesolutions.com/fullchain.pem; # managed by Certbot
+    	ssl_certificate_key /etc/letsencrypt/live/tucsonhealthinsurancesolutions.com/privkey.pem; # managed by Certbot
+    	include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    	ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+# New Mexico subdomain HTTPS server
+server {
+	listen [::]:443 ssl; # IPv6
+	listen 443 ssl; # IPv4
+	server_name www.newmexico.tucsonhealthinsurancesolutions.com newmexico.tucsonhealthinsurancesolutions.com www.new_mexico.tucsonhealthinsurancesolutions.com new_mexico.tucsonhealthinsurancesolutions.com www.nm.tucsonhealthinsurancesolutions.com nm.tucsonhealthinsurancesolutions.com;
+
+	root /var/www/tucsonhealthinsurancesolutions/newmexico;
+	index index.html index.htm;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+
+	# SSL configuration
+    	ssl_certificate /etc/letsencrypt/live/tucsonhealthinsurancesolutions.com/fullchain.pem; # managed by Certbot
+    	ssl_certificate_key /etc/letsencrypt/live/tucsonhealthinsurancesolutions.com/privkey.pem; # managed by Certbot
+    	include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    	ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+# Texas subdomain HTTPS server
+server {
+	listen [::]:443 ssl;
+	listen 443 ssl;
+	server_name www.texas.tucsonhealthinsurancesolutions.com texas.tucsonhealthinsurancesolutions.com www.tx.tucsonhealthinsurancesolutions.com tx.tucsonhealthinsurancesolutions.com;
+
+	root /var/www/tucsonhealthinsurancesolutions/texas;
+	index index.html index.htm;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+	# SSL configuration
+    	ssl_certificate /etc/letsencrypt/live/tucsonhealthinsurancesolutions.com/fullchain.pem; # managed by Certbot
+    	ssl_certificate_key /etc/letsencrypt/live/tucsonhealthinsurancesolutions.com/privkey.pem; # managed by Certbot
+    	include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    	ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+# Utah subdomain HTTPS server
+server {
+	listen [::]:443 ssl; # IPv6
+	listen 443 ssl; # IPv4
+	server_name www.utah.tucsonhealthinsurancesolutions.com utah.tucsonhealthinsurancesolutions.com www.ut.tucsonhealthinsurancesolutions.com ut.tucsonhealthinsurancesolutions.com;
+
+	root /var/www/tucsonhealthinsurancesolutions/utah;
+	index index.html index.htm;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+	# SSL configuration
+    	ssl_certificate /etc/letsencrypt/live/tucsonhealthinsurancesolutions.com/fullchain.pem; # managed by Certbot
+    	ssl_certificate_key /etc/letsencrypt/live/tucsonhealthinsurancesolutions.com/privkey.pem; # managed by Certbot
+    	include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    	ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+# HTTP to HTTPS redirect for all domains and subdomains
+server {
+    listen 80;
+    listen [::]:80;
+    server_name tucsonhealthinsurancesolutions.com www.tucsonhealthinsurancesolutions.com
+                arizona.tucsonhealthinsurancesolutions.com www.arizona.tucsonhealthinsurancesolutions.com
+                az.tucsonhealthinsurancesolutions.com www.az.tucsonhealthinsurancesolutions.com
+                blog.tucsonhealthinsurancesolutions.com www.blog.tucsonhealthinsurancesolutions.com
+                california.tucsonhealthinsurancesolutions.com www.california.tucsonhealthinsurancesolutions.com
+                ca.tucsonhealthinsurancesolutions.com www.ca.tucsonhealthinsurancesolutions.com
+                florida.tucsonhealthinsurancesolutions.com www.florida.tucsonhealthinsurancesolutions.com
+                fl.tucsonhealthinsurancesolutions.com www.fl.tucsonhealthinsurancesolutions.com
+                michigan.tucsonhealthinsurancesolutions.com www.michigan.tucsonhealthinsurancesolutions.com
+                mi.tucsonhealthinsurancesolutions.com www.mi.tucsonhealthinsurancesolutions.com
+                newmexico.tucsonhealthinsurancesolutions.com www.newmexico.tucsonhealthinsurancesolutions.com
+                new_mexico.tucsonhealthinsurancesolutions.com www.new_mexico.tucsonhealthinsurancesolutions.com
+                nm.tucsonhealthinsurancesolutions.com www.nm.tucsonhealthinsurancesolutions.com
+                texas.tucsonhealthinsurancesolutions.com www.texas.tucsonhealthinsurancesolutions.com
+                tx.tucsonhealthinsurancesolutions.com www.tx.tucsonhealthinsurancesolutions.com
+                utah.tucsonhealthinsurancesolutions.com www.utah.tucsonhealthinsurancesolutions.com
+                ut.tucsonhealthinsurancesolutions.com www.ut.tucsonhealthinsurancesolutions.com;
+
+    return 301 https://$host$request_uri;
