@@ -1,28 +1,89 @@
 # Tucson Health Insurance Solutions
-My website source material to help other insurance agents get rolling with a health insurance sales setup; I'm also building up SQL codes for cataloging CMS Medicare data. Right now all this project is HTML files being served up with Nginx. I'm building up to a PostgREST to streamline the server.
 
-# I'm going to keep away from templating language and just guide you through my setup
+## Overview
+Tucson Health Insurance Solutions is a professional website for a Tucson, Arizona-based health insurance agency, led by Derek Stevens. The site provides information on health insurance services, including Medicare Advantage, ACA Marketplace plans, group health insurance, and more, tailored for residents in Arizona, California, Florida, New Mexico, Texas, and Utah. The website is hosted on a Debian 12 server using Nginx, with subdomains for state-specific content and a blog. This repository contains the website’s source code, including HTML, PHP, and Nginx configuration files.
 
+## Features
+- **Responsive Design**: A clean, user-friendly HTML interface styled with Tailwind CSS, optimized for desktop and mobile.
+- **Contact Form**: A PHP-based contact form (`contact.php`) for client inquiries, with input validation and email functionality.
+- **Subdomains**: State-specific subdomains (e.g., `arizona.tucsonhealthinsurancesolutions.com`, `blog.tucsonhealthinsurancesolutions.com`) for targeted content.
+- **Nginx Configuration**: Secure, modular server setup with HTTPS, static file caching, custom 404 pages, and PHP support.
+- **Services Section**: Details on offerings like Medicare Advantage, ACA plans, group health insurance, and long-term care.
+- **About Page**: Information about Derek Stevens, emphasizing local expertise and personalized service.
 
-# Debian 12 Quickmount Instructions:
-Move everything in this /website/ folder to your server in the location: /var/www/tucsonhealthinsurancesolutions/
-drop that .bashrc into the main directory ~/ to save yourself some sanity. Source it with the command:
-source .bashrc
-sudo apt-get install ufw git python-certbot-nginx rsync nginx
-sudo ufw allow 80
-	*** Confirm firewall down on that port; Test with command: ufw status ***
-sudo ufw allow 153
-	*** Most providers have port 153 pre-blocked because it is commonly abused. You need to ask them to unblock it; They will normally only do it after 30 days of active server time. ***
-audo upgrade -y
-sudo apt-get upgrade -y
-	*** Take files from /etc/nginx/sites-available/ and plug it into your own server. link them up afterwards with the following two commands; Ignore the mail file if you are forgoing mail for now ***
-ln -s /etc/nginx/sites-available/tucsonhealthinsurancesolutions /etc/nginx/sites-enabled/
-ln -s /etc/nginx/sites-available/mail_tucsonhealthinsurancesolutions /etc/nginx/sites-enabled
-s reload nginx
+## Directory Structure
+```
+/var/www/tucsonhealthinsurancesolutions/
+├── index.html              # Main website landing page
+├── contact.php             # Contact form processing script
+├── 404.html                # Custom 404 error page
+├── /arizona/               # Arizona subdomain content
+├── /blog/                  # Blog subdomain content (optional WordPress setup)
+├── /california/            # California subdomain content
+├── /florida/               # Florida subdomain content
+├── /michigan/              # Michigan subdomain content
+├── /newmexico/             # New Mexico subdomain content
+├── /texas/                 # Texas subdomain content
+├── /utah/                  # Utah subdomain content
+/etc/nginx/
+├── /sites-available/tucsonhealthinsurancesolutions.conf  # Nginx configuration
+├── /snippets/ssl-params.conf                            # Shared SSL settings
+├── /snippets/security-headers.conf                      # Security headers
+```
 
-# Setup the email
-certbot --nginx
+## Installation
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/realderekstevens/Tucson-Health-Insurance-Solutions.git
+   ```
 
-# After that you should be good to go. You now have a quality, efficent server for emails and your buisness. If you shop around you can do it for ~$1.99/month?
+2. **Set Up Directory Structure**:
+   - Copy website files to `/var/www/tucsonhealthinsurancesolutions/`.
+   - Set permissions: `chown -R www-data:www-data /var/www/tucsonhealthinsurancesolutions` and `chmod -R 644 /var/www/tucsonhealthinsurancesolutions`.
 
-# This project is inspired by Luke Smith's work. Checkout his guide for something a little more indepth: https://www.youtube.com/watch?v=3dIVesHEAzc
+3. **Configure Nginx**:
+   - Copy `tucsonhealthinsurancesolutions.conf` to `/etc/nginx/sites-available/`.
+   - Create a symlink: `ln -s /etc/nginx/sites-available/tucsonhealthinsurancesolutions.conf /etc/nginx/sites-enabled/`.
+   - Copy `ssl-params.conf` and `security-headers.conf` to `/etc/nginx/snippets/`.
+   - Test configuration: `nginx -t`.
+   - Reload Nginx: `systemctl reload nginx`.
+
+4. **Install Dependencies**:
+   - Install Nginx and PHP-FPM on Debian 12:
+     ```bash
+     apt update
+     apt install nginx php8.1-fpm php8.1-common
+     ```
+   - Ensure PHP-FPM is running: `systemctl status php8.1-fpm`.
+
+5. **Set Up SSL**:
+   - Obtain a Let’s Encrypt certificate:
+     ```bash
+     certbot --nginx -d tucsonhealthinsurancesolutions.com -d www.tucsonhealthinsurancesolutions.com -d arizona.tucsonhealthinsurancesolutions.com -d www.arizona.tucsonhealthinsurancesolutions.com ...
+     ```
+   - Update `/etc/nginx/snippets/ssl-params.conf` with certificate paths.
+
+6. **Mail Server**:
+   - Install and configure a mail server (e.g., Postfix) for `contact.php`:
+     ```bash
+     apt install postfix
+     ```
+   - Alternatively, configure an external SMTP service (e.g., SendGrid) in `contact.php`.
+
+7. **Optional Blog Setup**:
+   - For the Blog subdomain, install WordPress in `/var/www/tucsonhealthinsurancesolutions/blog` and configure a database (e.g., MySQL).
+
+## Usage
+- Access the main site: `https://tucsonhealthinsurancesolutions.com`
+- Access subdomains: e.g., `https://arizona.tucsonhealthinsurancesolutions.com`, `https://blog.tucsonhealthinsurancesolutions.com`
+- Submit inquiries via the contact form: `https://tucsonhealthinsurancesolutions.com/contact.php`
+- Monitor logs: `/var/log/nginx/*.access.log` and `/var/log/nginx/*.error.log`
+
+## Contributing
+Contributions are welcome! Please submit a pull request or open an issue for bug reports, feature requests, or improvements.
+
+## License
+This project is licensed under the MIT License.
+
+## Contact
+For inquiries, contact Derek Stevens at Derek@TucsonHealthInsuranceSolutions.com
