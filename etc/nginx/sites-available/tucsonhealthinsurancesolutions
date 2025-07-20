@@ -38,7 +38,7 @@ location ~ \.php$ {
 server {
 	listen [::]:443 ssl; # IPv6
 	listen 443 ssl; # IPv4
-	server_name www.arizona.tucsonhealthinsurancesolutions.com arizona.tucsonhealthinsurancesolutions.com az.tucsonhealthinsurancesolutions.com www.az.tucsonhealthinsurancesolutions.com;
+	server_name www.arizona.tucsonhealthinsurancesolutions.com arizona.tucsonhealthinsurancesolutions.com;
 
 	root /var/www/tucsonhealthinsurancesolutions/arizona;
 	index index.html index.htm;
@@ -102,7 +102,7 @@ server {
 server {
 	listen [::]:443 ssl; # IPv6
 	listen 443 ssl; # IPv4
-	server_name www.california.tucsonhealthinsurancesolutions.com california.tucsonhealthinsurancesolutions.com www.ca.tucsonhealthinsurancesolutions.com ca.tucsonhealthinsurancesolutions.com;
+	server_name www.california.tucsonhealthinsurancesolutions.com california.tucsonhealthinsurancesolutions.com;
 
 	root /var/www/tucsonhealthinsurancesolutions/california;
 	index index.html index.htm;
@@ -121,7 +121,7 @@ server {
 server {
 	listen [::]:443 ssl; # IPv6
 	listen 443 ssl; # IPv4
-	server_name www.florida.tucsonhealthinsurancesolutions.com florida.tucsonhealthinsurancesolutions.com www.fl.tucsonhealthinsurancesolutions.com fl.tucsonhealthinsurancesolutions.com;
+	server_name www.florida.tucsonhealthinsurancesolutions.com florida.tucsonhealthinsurancesolutions.com;
 
 	root /var/www/tucsonhealthinsurancesolutions/florida;
 	index index.html index.htm;
@@ -141,7 +141,7 @@ server {
 server {
 	listen [::]:443 ssl; # IPv6
 	listen 443 ssl; # IPv4
-	server_name www.michigan.tucsonhealthinsurancesolutions.com michigan.tucsonhealthinsurancesolutions.com www.mi.tucsonhealthinsurancesolutions.com mi.tucsonhealthinsurancesolutions.com;
+	server_name www.michigan.tucsonhealthinsurancesolutions.com michigan.tucsonhealthinsurancesolutions.com;
 
 	root /var/www/tucsonhealthinsurancesolutions/michigan;
 	index index.html index.htm;
@@ -161,7 +161,7 @@ server {
 server {
 	listen [::]:443 ssl; # IPv6
 	listen 443 ssl; # IPv4
-	server_name www.newmexico.tucsonhealthinsurancesolutions.com newmexico.tucsonhealthinsurancesolutions.com www.new_mexico.tucsonhealthinsurancesolutions.com new_mexico.tucsonhealthinsurancesolutions.com www.nm.tucsonhealthinsurancesolutions.com nm.tucsonhealthinsurancesolutions.com;
+	server_name www.newmexico.tucsonhealthinsurancesolutions.com newmexico.tucsonhealthinsurancesolutions.com;
 
 	root /var/www/tucsonhealthinsurancesolutions/newmexico;
 	index index.html index.htm;
@@ -181,7 +181,7 @@ server {
 server {
 	listen [::]:443 ssl;
 	listen 443 ssl;
-	server_name www.texas.tucsonhealthinsurancesolutions.com texas.tucsonhealthinsurancesolutions.com www.tx.tucsonhealthinsurancesolutions.com tx.tucsonhealthinsurancesolutions.com;
+	server_name www.texas.tucsonhealthinsurancesolutions.com texas.tucsonhealthinsurancesolutions.com;
 
 	root /var/www/tucsonhealthinsurancesolutions/texas;
 	index index.html index.htm;
@@ -200,7 +200,7 @@ server {
 server {
 	listen [::]:443 ssl; # IPv6
 	listen 443 ssl; # IPv4
-	server_name www.utah.tucsonhealthinsurancesolutions.com utah.tucsonhealthinsurancesolutions.com www.ut.tucsonhealthinsurancesolutions.com ut.tucsonhealthinsurancesolutions.com;
+	server_name www.utah.tucsonhealthinsurancesolutions.com utah.tucsonhealthinsurancesolutions.com;
 
 	root /var/www/tucsonhealthinsurancesolutions/utah;
 	index index.html index.htm;
@@ -221,20 +221,12 @@ server {
     listen [::]:80;
     server_name tucsonhealthinsurancesolutions.com www.tucsonhealthinsurancesolutions.com
                 arizona.tucsonhealthinsurancesolutions.com www.arizona.tucsonhealthinsurancesolutions.com
-                az.tucsonhealthinsurancesolutions.com www.az.tucsonhealthinsurancesolutions.com
                 blog.tucsonhealthinsurancesolutions.com www.blog.tucsonhealthinsurancesolutions.com
                 california.tucsonhealthinsurancesolutions.com www.california.tucsonhealthinsurancesolutions.com
-                ca.tucsonhealthinsurancesolutions.com www.ca.tucsonhealthinsurancesolutions.com
                 florida.tucsonhealthinsurancesolutions.com www.florida.tucsonhealthinsurancesolutions.com
-                fl.tucsonhealthinsurancesolutions.com www.fl.tucsonhealthinsurancesolutions.com
                 michigan.tucsonhealthinsurancesolutions.com www.michigan.tucsonhealthinsurancesolutions.com
-                mi.tucsonhealthinsurancesolutions.com www.mi.tucsonhealthinsurancesolutions.com
                 newmexico.tucsonhealthinsurancesolutions.com www.newmexico.tucsonhealthinsurancesolutions.com
-                new_mexico.tucsonhealthinsurancesolutions.com www.new_mexico.tucsonhealthinsurancesolutions.com
-                nm.tucsonhealthinsurancesolutions.com www.nm.tucsonhealthinsurancesolutions.com
                 texas.tucsonhealthinsurancesolutions.com www.texas.tucsonhealthinsurancesolutions.com
-                tx.tucsonhealthinsurancesolutions.com www.tx.tucsonhealthinsurancesolutions.com
                 utah.tucsonhealthinsurancesolutions.com www.utah.tucsonhealthinsurancesolutions.com
-                ut.tucsonhealthinsurancesolutions.com www.ut.tucsonhealthinsurancesolutions.com;
 
     return 301 https://$host$request_uri;
