@@ -1,66 +1,57 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Tucson Health Insurance Solutions - Your Trusted Health Insurance Partner in Tucson, AZ">
+    <title>Tucson Health Insurance Solutions - Your Trusted Health Insurance Partner</title>
+    <meta name="description" content="Expert health insurance solutions in Tucson, Arizona. Get personalized Medicare, ACA, group plans, and more from licensed agent Derek Stevens.">
     <meta name="keywords" content="health insurance, Tucson, Arizona, Derek Stevens, Medicare, ACA, Medicaid, AHCCCS, group health, short term care, long term care, hospital indemnity, surgery planning, moving across country">
     <meta name="author" content="Derek Stevens">
+    
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="Tucson Health Insurance Solutions">
-    <meta property="og:description" content="Personalized health insurance plans for Tucson residents. Get a free quote today!">
-    <meta property="og:image" content="https://tucsonhealthinsurancesolutions.com/images/og-image.jpg">
+    <meta property="og:description" content="Find the best health insurance plans in Tucson">
+    <meta property="og:image" content="https://tucsonhealthinsurancesolutions.com/images/derek_stevens_fullbody.jpg">
     <meta property="og:url" content="https://tucsonhealthinsurancesolutions.com">
     <meta property="og:type" content="website">
+    
+    <!-- Schema Markup for Insurance Agency -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "InsuranceAgency",
+      "name": "Tucson Health Insurance Solutions",
+      "url": "https://www.tucsonhealthinsurancesolutions.com",
+      "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Tucson",
+          "addressRegion": "AZ",
+          "postalCode": "85705",
+          "addressCountry": "US"
+        },
+        "telephone": "+1-505-228-3194",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+1-505-228-3194",
+          "contactType": "Customer Service"
+        }
+    }
+    </script>
+    
     <!-- Favicon and Icons -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="manifest" href="/site.webmanifest">
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <!-- Google Fonts: Roboto -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -92,6 +83,26 @@
         }
         .top-bar {
             z-index: 60;
+        }
+        .quick-toolbar {
+            position: fixed;
+            right: 0;
+            top: 25%;
+            width: 13rem;
+            background: white;
+            padding: 1rem;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+            border-left: 4px solid #1D4ED8;
+            z-index: 40;
+        }
+        @media (max-width: 1023px) {
+            .quick-toolbar {
+                position: static;
+                width: 100%;
+                border-left: none;
+                border-top: 4px solid #1D4ED8;
+                margin: 1rem 0;
+            }
         }
     </style>
 </head>
@@ -152,6 +163,16 @@
             </ul>
         </div>
     </header>
+
+    <!-- Quick Access Toolbar -->
+    <aside class="quick-toolbar">
+        <h3 class="text-lg font-bold text-blue-600 mb-4">Self-Service Quick Quote Links</h3>
+        <ul class="space-y-3">
+            <li><a href="https://customer.enroll.natgenhealth.com/quick-quote/?agent=CfDJ8JkkUhL7-q1LjFdip3ceamrzKhArOWhdPu-FkLo0W2uXw5QCAKgMwe2tnkyt1iu4CsLfnqfitMgTNcjiIMP93zCbMA&product=all-products" class="flex items-center text-gray-600 hover:text-blue-600"><i class="fas fa-external-link-alt mr-2"></i> Allstate Quote</a></li>
+            <li><a href="https://www.healthsherpa.com/marketplace/health?_agent_id=derek-stevens-sepbha&is_agent=true&utm_source=plan_share_widget_copy" class="flex items-center text-gray-600 hover:text-blue-600"><i class="fas fa-external-link-alt mr-2"></i>Under 65/Open Marketplace</a></li>
+            <li><a href="https://my.destinationrx.com/hub/s/SS25DLTWA" class="flex items-center text-gray-600 hover:text-blue-600"><i class="fas fa-external-link-alt mr-2"></i>Medicare Plans</a></li>
+        </ul>
+    </aside>
 
     <!-- Hero Section -->
     <section id="home" class="hero-bg text-white py-20">
@@ -232,7 +253,7 @@
             <h2 class="text-3xl font-bold text-center text-blue-600 mb-8">About Derek Stevens</h2>
             <div class="flex flex-col md:flex-row items-center">
                 <div class="md:w-1/2 mb-6 md:mb-0">
-                    <img src="derek_stevens_fullbody.jpg" alt="Derek Stevens, Tucson Health Insurance Expert" class="rounded-lg shadow-md w-full">
+                    <img src="images/derek_stevens_fullbody.jpg" alt="Derek Stevens, Tucson Health Insurance Expert" class="rounded-lg shadow-md w-full">
                 </div>
                 <div class="md:w-1/2 md:pl-8">
                     <p class="text-gray-600 mb-4">Derek, 35, is licensed in all insurance lines but specializes in health insurance. He gives clients an unfair advantage in health insurance planning by discussing their needs and conducting side-by-side comparisons of all available options. "My goal is to provide every client peace of mind by minimizing burdens and maximizing entitlements."</p>
@@ -249,12 +270,10 @@
     <section id="contact" class="py-16 bg-white">
         <div class="container mx-auto px-6">
             <h2 class="text-3xl font-bold text-center text-blue-600 mb-8">Contact Us</h2>
-            <div class="grid grid-cols-1 md:grid-cols-1 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Contact Form -->
                 <div>
-                    <?php session_start(); if (empty($_SESSION['csrf_token'])) { $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); } ?>
                     <form class="space-y-4" action="/submit.php" method="POST">
-                        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
                         <div>
                             <label for="name" class="block text-gray-600 font-medium">Name</label>
                             <input type="text" id="name" name="name" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" required>
@@ -269,6 +288,10 @@
                         </div>
                         <button type="submit" class="bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-700 transition">Send Message</button>
                     </form>
+                </div>
+                <!-- Google Maps Embed -->
+                <div>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3374.163!2d-110.9566!3d32.2526!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzLCsDE1JzA5LjQiTiAxMTDCsDU3JzIzLjgiVw!5e0!3m2!1sen!2sus!4v1699481234567" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                 </div>
             </div>
         </div>
@@ -299,21 +322,6 @@
         const mobileMenu = document.getElementById('mobile-menu');
         menuToggle.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
-        });
-    </script>
-    <!-- Form Submission Feedback -->
-    <script>
-        document.querySelector('form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const form = e.target;
-            const response = await fetch(form.action, {
-                method: form.method,
-                body: new FormData(form),
-                headers: { 'Accept': 'application/json' }
-            });
-            const result = await response.json();
-            alert(result.message);
-            if (result.status === 'success') form.reset();
         });
     </script>
 </body>
